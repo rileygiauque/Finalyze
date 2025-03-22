@@ -1,0 +1,39 @@
+[
+    {
+        "fullName": "Riley Giauque",
+        "email": "riley1@aol.com",
+        "newPassword": "riley1",
+        "api_key": "6b0024fd93d5f7ef80c9decf73c9525416d08c524917f4916217b982a738bc3b",
+        "usage": 0.2275000000000001,
+        "usage_denominator": 5,
+        "flat_rate_paid": false,
+        "Subscribed": "No",
+        "Unsubscribed": "Yes",
+        "Sign Up Status": "Not Yet",
+        "Administrator": "No",
+        "AccessEndDate": "Unknown",
+        "subscriptionPlan": "",
+        "advisorType": "Goal",
+        "Administrator Access NEW": "No"
+    },
+    {
+        "fullName": "Riley Giauque",
+        "email": "riley.r.giauque@gmail.com",
+        "newPassword": "Hey",
+        "api_key": "0743fcb162f0c1226e94500dcd35e315043678e44f2743e980b73be01898975c",
+        "usage": 6.8149999999999915,
+        "usage_denominator": 5,
+        "flat_rate_paid": false,
+        "Subscribed": "Yes",
+        "Unsubscribed": "No",
+        "Sign Up Status": "Signed Up",
+        "Administrator": "No",
+        "Administrator Access NEW": "Yes",
+        "AccessEndDate": "2025-04-12",
+        "subscriptionPlan": "",
+        "advisorType": "Risk",
+        "assignedScenarios": [
+            "Risk"
+        ]
+    }
+]
