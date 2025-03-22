@@ -22,6 +22,9 @@ from datetime import datetime
 from functools import wraps
 from dotenv import load_dotenv
 
+port = int(os.environ.get('PORT', 8000))
+print(f"Configuring app to run on port {port}")
+
 import logging
 from logging import StreamHandler
 
