@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Disclosure Assignment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+
+/* Intro Section Styles */
+.intro-section {
+    margin-bottom: 40px;
+}
+
+.intro-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.intro-icon {
+    background: linear-gradient(135deg, #2c5282, #0072ff);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.intro-icon i {
+    font-size: 48px;
+    color: white;
+}
+
+.intro-content {
+    flex: 1;
+}
+
+.intro-content h2 {
+    font-size: 28px;
+    margin-bottom: 15px;
+    color: white;
+}
+
+.intro-content p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.intro-benefits {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.benefit-item i {
+    color: #4ade80;
+}
+
+@media (max-width: 768px) {
+    .intro-container {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .intro-benefits {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* This ensures the links are displayed correctly in the first place */
+.site-navigation > ul > li > a {
+    display: inline-block !important;
+    color: white !important;
+    text-decoration: none !important;
+    padding: 8px 12px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.dropdown .dropdown-menu {
+    display: none !important;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block !important;
+}
+
+
+/* Larger logo styling */
+.logo-title .site-logo {
+    height: 200px; /* Try a moderate increase first */
+    max-height: 200px; /* Ensure it doesn't get too large */
+}
+
+/* Logo and title */
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.site-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 180px;
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    z-index: 1000;
+    padding: 8px 0;
+}
+
+.dropdown-menu li {
+    display: block;
+    width: 100%;
+    margin: 0;
+}
+
+.dropdown-menu li a {
+    padding: 8px 16px;
+    display: block;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0 60px;
+            box-sizing: border-box;
+            background: linear-gradient(to bottom right, #19344f, #007bff);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        h1, h2, h3 {
+            color: #19344f;
+        }
+
+        /* Header */
+        .site-header {
+            background: transparent;
+            color: white;
+            padding: 10px 0;
+            box-shadow: none;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            min-height: 60px;
+        }
+
+        .site-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .site-navigation ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .site-navigation a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .site-navigation a:hover {
+            transform: scale(1.05);
+            background-color: transparent;
+        }
+
+        /* Search Panel */
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* User Results */
+        .user-results {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .user-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #e9ecef;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        /* Disclosure Assignment Panel */
+        .disclosure-form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Scenarios Section */
+        .scenario-list {
+            margin-top: 20px;
+        }
+
+        .scenario-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+
+        .scenario-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .scenario-content {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* New Disclosure Form */
+        .new-disclosure-form {
+            margin-top: 20px;
+            display: none; /* Hidden by default */
+        }
+
+        .toggle-new-form {
+            cursor: pointer;
+            color: #007bff;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: white;
+            margin-top: 40px;
+            font-size: 14px;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 0 20px;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+<header class="site-header">
+    <div class="header-container">
+        <!-- Logo and Site Title -->
+        <div class="logo-title">
+            <img src="/logo.png" alt="Logo" class="site-logo">
+            <h1 class="site-title"></h1>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="site-navigation">
+            <ul>
+                <li>
+                    <a href="/">Compliance Check</a>
+                </li>
+                <li>
+                    <a href="/profile">Profile</a>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">Admin <i class="fa fa-caret-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/manage-disclosures">Disclosures</a></li>
+                        <li><a href="/assign-disclosures">Personalization</a></li>
+                        <li><a href="/training">System Training</a></li>
+                        <li><a href="/admin-access">Admin Access</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/login">Logout</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Add this right after the header section and before the container div -->
+<div class="intro-section">
+    <div class="intro-container">
+        <div class="intro-icon">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <div class="intro-content">
+            <h2>Manage Advisor Based Disclosures</h2>
+            <p>Assign specific disclosure scenarios to individual users based on their roles and responsibilities. This page also allows you to add new scenarios and delete if needed.</p>
+            <div class="intro-benefits">
+                <div class="benefit-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Role-specific compliance</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-users-cog"></i>
+                    <span>User management</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-tasks"></i>
+                    <span>Scenario assignment</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        <!-- Search Panel -->
+        <div class="panel">
+            <h2>Search for User</h2>
+            <div class="search-form">
+                <input type="text" id="searchInput" class="search-input" placeholder="Enter name or email...">
+                <button id="searchBtn" class="btn btn-primary">Search</button>
+            </div>
+            
+            <!-- User Results -->
+            <div class="user-results" id="userResults">
+                <!-- Users will be populated here -->
+            </div>
+        </div>
+
+        <!-- Disclosure Assignment Panel -->
+        <div class="panel" id="assignmentPanel" style="display: none;">
+            <h2>Assign Disclosure</h2>
+            <div id="selectedUser" class="user-card">
+                <!-- Selected user will be displayed here -->
+            </div>
+
+            <!-- Add this right after the selectedUser div in the Disclosure Assignment Panel -->
+<div id="userDisclosureStatus" class="form-group" style="margin-top: 15px;">
+    <div class="disclosure-status-box" style="padding: 10px; background-color: #f8f9fa; border-radius: 4px; border-left: 4px solid #007bff;">
+        <p id="assignedDisclosureText" style="margin: 0; font-weight: 500;">No scenario currently assigned</p>
+    </div>
+</div>
+            
+            <!-- Success/Error Message -->
+            <div id="statusMessage" class="status-message"></div>
+            
+            <!-- Scenario Selection Form -->
+            <div class="disclosure-form">
+                <div class="form-group">
+                    <label class="form-label">Select an Existing Scenario:</label>
+                    <select id="scenarioSelect" class="form-control">
+                        <option value="">-- Select a scenario --</option>
+                        <!-- Scenarios will be populated here -->
+                    </select>
+                </div>
+                
+                <div class="form-group" style="display: none;">
+                    <label class="form-label">Or Create a Custom Disclosure:</label>
+                    <textarea id="customDisclosure" class="form-control" placeholder="Enter custom disclosure text..."></textarea>
+                </div>
+                
+                <button id="assignBtn" class="btn btn-success">Assign to User</button>
+            </div>
+        </div>
+        
+        <!-- Scenarios Management Panel -->
+        <div class="panel">
+            <h2>Manage Disclosure Scenarios</h2>
+            
+            <div id="scenarioList" class="scenario-list">
+                <!-- Scenarios will be populated here -->
+            </div>
+            
+            <span id="toggleNewForm" class="toggle-new-form">+ Add New Scenario</span>
+            
+            <!-- New Scenario Form -->
+            <div id="newScenarioForm" class="new-disclosure-form">
+                <div class="form-group">
+                    <label class="form-label">Scenario Title:</label>
+                    <input type="text" id="newScenarioTitle" class="form-control" placeholder="Enter a title...">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Disclosure Text:</label>
+                    <textarea id="newScenarioDisclosure" class="form-control" placeholder="Enter disclosure text..."></textarea>
+                </div>
+                
+                <button id="addScenarioBtn" class="btn btn-primary">Add New Scenario</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2025 Finalyze, LLC. All Rights Reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cache DOM elements
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const userResults = document.getElementById('userResults');
+            const assignmentPanel = document.getElementById('assignmentPanel');
+            const selectedUser = document.getElementById('selectedUser');
+            const scenarioSelect = document.getElementById('scenarioSelect');
+            const customDisclosure = document.getElementById('customDisclosure');
+            const assignBtn = document.getElementById('assignBtn');
+            const scenarioList = document.getElementById('scenarioList');
+            const toggleNewForm = document.getElementById('toggleNewForm');
+            const newScenarioForm = document.getElementById('newScenarioForm');
+            const newScenarioTitle = document.getElementById('newScenarioTitle');
+            const newScenarioDisclosure = document.getElementById('newScenarioDisclosure');
+            const addScenarioBtn = document.getElementById('addScenarioBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            // Current selected user
+            let currentUser = null;
+            
+            // Initialize by loading scenarios
+            loadScenarios();
+            
+            // Search button click handler
+            searchBtn.addEventListener('click', function() {
+                const query = searchInput.value.trim();
+                if (query.length > 0) {
+                    searchUser(query);
+                }
+            });
+            
+            // Enter key in search input
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+            
+            // Toggle new scenario form
+            toggleNewForm.addEventListener('click', function() {
+                if (newScenarioForm.style.display === 'none' || !newScenarioForm.style.display) {
+                    newScenarioForm.style.display = 'block';
+                    toggleNewForm.textContent = '- Cancel';
+                } else {
+                    newScenarioForm.style.display = 'none';
+                    toggleNewForm.textContent = '+ Add New Scenario';
+                    // Clear form fields
+                    newScenarioTitle.value = '';
+                    newScenarioDisclosure.value = '';
+                }
+            });
+            
+            // Add new scenario
+            addScenarioBtn.addEventListener('click', function() {
+                const title = newScenarioTitle.value.trim();
+                const disclosure = newScenarioDisclosure.value.trim();
+                
+                if (!title) {
+                    showStatusMessage('Please enter a scenario title.', 'error');
+                    return;
+                }
+                
+                if (!disclosure) {
+                    showStatusMessage('Please enter disclosure text.', 'error');
+                    return;
+                }
+                
+                addScenario(title, disclosure);
+            });
+            
+            // Assign disclosure to user
+            assignBtn.addEventListener('click', function() {
+                if (!currentUser) {
+                    showStatusMessage('Please select a user first.', 'error');
+                    return;
+                }
+                
+                let scenarioTitle = '';
+                let disclosureText = '';
+                
+                // Check if using existing scenario or custom disclosure
+                if (scenarioSelect.value) {
+                    scenarioTitle = scenarioSelect.options[scenarioSelect.selectedIndex].text;
+                    // We'll fetch the disclosure text based on the title
+                } else if (customDisclosure.value.trim()) {
+                    scenarioTitle = 'Custom Disclosure';
+                    disclosureText = customDisclosure.value.trim();
+                } else {
+                    showStatusMessage('Please select a scenario or enter a custom disclosure.', 'error');
+                    return;
+                }
+                
+                assignDisclosure(currentUser.email, scenarioTitle, disclosureText);
+            });
+            
+            // Function to search for users
+            function searchUser(query) {
+                fetch('/search_user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query: query })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.users && data.users.length > 0) {
+                        displayUsers(data.users);
+                    } else {
+                        userResults.innerHTML = '<p>No users found matching your search criteria.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error searching for users:', error);
+                    userResults.innerHTML = '<p>An error occurred while searching. Please try again.</p>';
+                });
+            }
+            
+            // Function to display users in the results area
+            function displayUsers(users) {
+                userResults.innerHTML = '';
+                
+                users.forEach(user => {
+                    const userCard = document.createElement('div');
+                    userCard.className = 'user-card';
+                    
+                    userCard.innerHTML = `
+                        <div class="user-info">
+                            <div class="user-name">${user.fullName}</div>
+                            <div class="user-email">${user.email}</div>
+                        </div>
+                        <button class="btn btn-primary select-user-btn">Select</button>
+                    `;
+                    
+                    userResults.appendChild(userCard);
+                    
+                    // Add click event to the select button
+                    const selectBtn = userCard.querySelector('.select-user-btn');
+                    selectBtn.addEventListener('click', function() {
+                        selectUser(user);
+                    });
+                });
+            }
+            
+            // Function to select a user
+function selectUser(user) {
+    currentUser = user;
+    
+    // Display the selected user
+    selectedUser.innerHTML = `
+        <div class="user-info">
+            <div class="user-name">${user.fullName}</div>
+            <div class="user-email">${user.email}</div>
+        </div>
+    `;
+    
+    // Check for and display any assigned disclosure
+    const assignedDisclosureText = document.getElementById('assignedDisclosureText');
+    const assignBtn = document.getElementById('assignBtn');
+    
+    // Check if user has assigned scenarios
+    if (user.assignedScenarios && user.assignedScenarios.length > 0) {
+        const scenario = user.assignedScenarios[0]; // Get the first (and should be only) scenario
+        assignedDisclosureText.innerHTML = `
+            Current Scenario: <strong>${scenario}</strong>
+            <button id="removeScenarioBtn" class="btn btn-sm btn-outline-danger" 
+            style="margin-left: 10px; padding: 2px 8px; font-size: 12px;">Remove</button>
+        `;
+        assignedDisclosureText.style.color = '#155724';
+        
+        // Instead of disabling the button, we'll keep it enabled but make it show an alert
+        assignBtn.disabled = false; 
+        assignBtn.classList.remove('btn-success');
+        assignBtn.classList.add('btn-warning');
+        assignBtn.textContent = 'Replace Scenario';
+        
+        // Add event listener to remove button
+        setTimeout(() => {
+            const removeBtn = document.getElementById('removeScenarioBtn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    removeScenarioFromUser(user.email);
+                });
+            }
+        }, 0);
+    } else {
+        assignedDisclosureText.textContent = 'No scenario currently assigned';
+        assignedDisclosureText.style.color = '#6c757d';
+        
+        // Standard assign button
+        assignBtn.disabled = false;
+        assignBtn.classList.remove('btn-warning');
+        assignBtn.classList.add('btn-success');
+        assignBtn.textContent = 'Assign to User';
+    }
+    
+    // Show the assignment panel
+    assignmentPanel.style.display = 'block';
+    
+    // Scroll to the assignment panel
+    assignmentPanel.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Replace the existing assignBtn click handler with this improved version
+assignBtn.addEventListener('click', function() {
+    // Hide the error message initially
+    const statusMessage = document.getElementById('statusMessage');
+    statusMessage.style.display = 'none';
+    
+    if (!currentUser) {
+        showStatusMessage('Please select a user first.', 'error');
+        return;
+    }
+    
+    // Check if a scenario is selected - but only if we're not replacing an existing one
+    if (!scenarioSelect.value && (!currentUser.assignedScenarios || currentUser.assignedScenarios.length === 0)) {
+        showStatusMessage('Please select a scenario.', 'error');
+        return;
+    }
+    
+    // For replacement case, ensure a new scenario is selected
+    if (currentUser.assignedScenarios && currentUser.assignedScenarios.length > 0) {
+        if (!scenarioSelect.value) {
+            showStatusMessage('Please select a new scenario to replace the current one.', 'error');
+            return;
+        }
+        
+        // Ask for confirmation before replacing
+        const userResponse = confirm("Scenario already assigned for user. If you proceed, current scenario assigned will be replaced. Do you wish to continue?");
+        
+        if (!userResponse) {
+            // User clicked Cancel - do nothing
+            console.log("User cancelled replacement");
+            return;
+        }
+        // If we get here, user clicked OK to proceed with replacement
+    }
+    
+    // Get the selected scenario
+    const selectedScenario = scenarioSelect.value;
+    
+    // Perform the assignment - this will replace any existing scenario
+    fetch('/assign_scenario', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: currentUser.email,
+            scenario: selectedScenario
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the current user object
+            if (!currentUser.assignedScenarios) {
+                currentUser.assignedScenarios = [];
+            }
+            currentUser.assignedScenarios = [selectedScenario];
+            
+            // Update the UI
+            updateAssignedScenarioDisplay(selectedScenario);
+            
+            // Show success message
+            showStatusMessage(`Disclosure successfully assigned to ${currentUser.fullName}!`, 'success');
+            
+            // Also update user's advisor type to match the assigned scenario
+            updateUserAdvisorType(currentUser.email, selectedScenario);
+            
+            // Reset form
+            scenarioSelect.selectedIndex = 0;
+        } else {
+            showStatusMessage(data.error || 'Failed to assign disclosure.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error assigning disclosure:', error);
+        showStatusMessage('An error occurred. Please try again.', 'error');
+    });
+});
+
+// Add this new function to update the user's advisor type
+function updateUserAdvisorType(email, advisorType) {
+    fetch('/update_advisor_type', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email,
+            advisorType: advisorType
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log('User advisor type updated successfully');
+        } else {
+            console.error('Failed to update user advisor type:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating user advisor type:', error);
+    });
+}
+
+// Add this new helper function
+function updateAssignedScenarioDisplay(scenarioTitle) {
+    const assignedDisclosureText = document.getElementById('assignedDisclosureText');
+    
+    // Update text and add remove button
+    assignedDisclosureText.innerHTML = `
+        Current Scenario: <strong>${scenarioTitle}</strong>
+        <button id="removeScenarioBtn" class="btn btn-sm btn-outline-danger" 
+        style="margin-left: 10px; padding: 2px 8px; font-size: 12px;">Remove</button>
+    `;
+    assignedDisclosureText.style.color = '#155724';
+    
+    // Update button style
+    const assignBtn = document.getElementById('assignBtn');
+    assignBtn.classList.remove('btn-success');
+    assignBtn.classList.add('btn-warning');
+    assignBtn.textContent = 'Replace Scenario';
+    
+    // Add event listener to the remove button
+    setTimeout(() => {
+        const removeBtn = document.getElementById('removeScenarioBtn');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', function() {
+                removeScenarioFromUser(currentUser.email);
+            });
+        }
+    }, 0);
+}
+
+function removeScenarioFromUser(userEmail) {
+    if (confirm('Are you sure you want to remove the assigned scenario from this user?')) {
+        console.log('Sending removal request for email:', userEmail);
+        
+        fetch('/remove_user_scenario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: userEmail })
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            
+            if (data.success) {
+                // Update current user object
+                if (currentUser && currentUser.email === userEmail) {
+                    currentUser.assignedScenarios = [];
+                }
+                
+                // Update UI
+                const assignedDisclosureText = document.getElementById('assignedDisclosureText');
+                assignedDisclosureText.textContent = 'No scenario currently assigned';
+                assignedDisclosureText.style.color = '#6c757d';
+                
+                // Reset assign button
+                const assignBtn = document.getElementById('assignBtn');
+                assignBtn.classList.remove('btn-warning');
+                assignBtn.classList.add('btn-success');
+                assignBtn.textContent = 'Assign to User';
+                
+                // Also clear the user's advisor type
+                updateUserAdvisorType(userEmail, '');
+                
+                showStatusMessage('Scenario removed successfully!', 'success');
+            } else {
+                showStatusMessage(data.error || 'Failed to remove scenario.', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error removing scenario:', error);
+            showStatusMessage('An error occurred. Please try again.', 'error');
+        });
+    }
+}
+
+// Function to search for users - updated to include assigned scenarios
+function searchUser(query) {
+    fetch('/search_user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: query })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.users && data.users.length > 0) {
+            displayUsers(data.users);
+        } else {
+            userResults.innerHTML = '<p>No users found matching your search criteria.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('Error searching for users:', error);
+        userResults.innerHTML = '<p>An error occurred while searching. Please try again.</p>';
+    });
+}
+            
+            // Function to load existing scenarios
+            function loadScenarios() {
+                fetch('/get_scenarios')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.scenarios) {
+                            // Populate the select dropdown
+                            scenarioSelect.innerHTML = '<option value="">-- Select a scenario --</option>';
+                            
+                            data.scenarios.forEach(scenario => {
+                                const option = document.createElement('option');
+                                option.value = scenario.title;
+                                option.textContent = scenario.title;
+                                scenarioSelect.appendChild(option);
+                            });
+                            
+                            // Display scenarios in the list
+                            displayScenarios(data.scenarios);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading scenarios:', error);
+                    });
+            }
+            
+            // Function to display scenarios
+            function displayScenarios(scenarios) {
+                scenarioList.innerHTML = '';
+                
+                if (scenarios.length === 0) {
+                    scenarioList.innerHTML = '<p>No scenarios available. Create a new one to get started.</p>';
+                    return;
+                }
+                
+                scenarios.forEach(scenario => {
+                    const scenarioItem = document.createElement('div');
+                    scenarioItem.className = 'scenario-item';
+                    
+                    scenarioItem.innerHTML = `
+                        <div class="scenario-title">
+                            <span>${scenario.title}</span>
+                            <button class="btn btn-primary delete-btn" data-title="${scenario.title}">Delete</button>
+                        </div>
+                        <div class="scenario-content">${scenario.disclosure}</div>
+                    `;
+                    
+                    scenarioList.appendChild(scenarioItem);
+                    
+                    // Add click event to delete button
+                    const deleteBtn = scenarioItem.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', function() {
+                        const title = this.getAttribute('data-title');
+                        deleteScenario(title);
+                    });
+                });
+            }
+            
+            // Function to add a new scenario
+            function addScenario(title, disclosure) {
+                fetch('/add_scenario', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        disclosure: disclosure
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Reload scenarios
+                        loadScenarios();
+                        
+                        // Reset form
+                        newScenarioTitle.value = '';
+                        newScenarioDisclosure.value = '';
+                        newScenarioForm.style.display = 'none';
+                        toggleNewForm.textContent = '+ Add New Scenario';
+                        
+                        showStatusMessage('Scenario added successfully!', 'success');
+                    } else {
+                        showStatusMessage(data.error || 'Failed to add scenario.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding scenario:', error);
+                    showStatusMessage('An error occurred. Please try again.', 'error');
+                });
+            }
+            
+            // Function to delete a scenario
+            function deleteScenario(title) {
+                if (confirm(`Are you sure you want to delete the scenario "${title}"?`)) {
+                    fetch('/delete_scenario', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ title: title })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Reload scenarios
+                            loadScenarios();
+                            showStatusMessage('Scenario deleted successfully!', 'success');
+                        } else {
+                            showStatusMessage(data.error || 'Failed to delete scenario.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting scenario:', error);
+                        showStatusMessage('An error occurred. Please try again.', 'error');
+                    });
+                }
+            }
+            
+            
+            // Function to show status messages
+            function showStatusMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = 'status-message';
+                statusMessage.classList.add(type === 'success' ? 'success-message' : 'error-message');
+                statusMessage.style.display = 'block';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>
