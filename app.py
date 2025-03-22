@@ -3420,4 +3420,6 @@ if __name__ == "__main__":
     else:
         logger.info("BERT model initialized successfully")
     
-    app.run(debug=True, use_reloader=False, port=8000, host='0.0.0.0')
+    # Get the port from the environment variable provided by Render
+    port = int(os.environ.get('PORT', 8000))
+    app.run(debug=False, use_reloader=False, port=port, host='0.0.0.0')
