@@ -462,6 +462,10 @@ def similarity_score(text1, text2):
 # APP = FLASK(__name__)
 app = Flask(__name__)
 
+@app.route('/intro')
+def intro_page():
+    return render_template('intro.html')
+
 @app.route('/api/remove-user-completely', methods=['POST'])
 def permanently_remove_user_from_system():
     try:
@@ -2332,12 +2336,11 @@ def log_request_info():
     
 @app.route('/', methods=['GET', 'POST'])
 def handle_upload():
-
-    # Log the currently logged-in user
+    # Check if user is logged in
     logged_in_user = session.get('user_email')
-    logger.info(f"Logged-in user: {session.get('user_email')}")
+    
+    # For POST requests, always process the form submission regardless of login status
     if request.method == 'POST':
-
         # Handle file upload
         distribution_method = request.form.get('distribution_method')
         logger.info(f"Selected distribution method: {distribution_method}")
@@ -2370,13 +2373,16 @@ def handle_upload():
 
             # Redirect to process the file after saving
             return redirect(url_for('process_file', filename=filename))
-
-    # Render the upload page and pass the logged-in user to the template
-    return render_template('upload.html', user_email=logged_in_user)
-
-    # Render the upload form if method is GET
-    return render_template('upload.html')
-
+    
+    # For GET requests, check login status
+    if not logged_in_user:
+        # User is not logged in, show intro page
+        logger.info("No user logged in, showing intro page")
+        return render_template('intro.html')
+    else:
+        # User is logged in, show the upload page
+        logger.info(f"Logged-in user: {logged_in_user}, showing upload page")
+        return render_template('upload.html', user_email=logged_in_user)
 
 
 
@@ -3408,7 +3414,6 @@ def terminal_logs():
         except Exception as e:
             yield f"data: Error: {str(e)}\n\n"
     return Response(stream_with_context(generate_logs()), mimetype='text/event-stream')
-
 
 if __name__ == "__main__":
     # Load all disclosures from the custom file
