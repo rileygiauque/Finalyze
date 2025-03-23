@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalyze | Compliance Communication Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+
+.login-button {
+    background-color: transparent;
+    color: white;
+    border: 1px solid white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-left: 15px;
+}
+
+.login-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .login-button {
+        display: none;
+    }
+}
+
+        :root {
+            --primary: #0056b3;
+            --secondary: #00386b;
+            --accent: #00aaff;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+	}
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+    	    background: linear-gradient(135deg, #0b0d23, #004e98, #00aaff);
+    	    color: #333;
+	}
+
+        .cta-button {
+    	    background: linear-gradient(45deg, var(--accent), var(--primary));
+    	    color: white;
+    	    padding: 10px 20px;
+    	    border-radius: 30px;
+    	    font-weight: 600;
+    	    text-decoration: none;
+    	    transition: all 0.3s ease;
+    	    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    	    display: inline-block;
+	}
+
+	.cta-button:hover {
+    	    transform: translateY(-3px);
+    	    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+	}
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+    	    background: rgba(0, 0, 0, 0.2);
+    	    backdrop-filter: blur(10px);
+    	    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    	    padding: 20px 0;
+    	    position: relative;
+    	    z-index: 100;
+	}
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+    	    font-weight: 700;
+    	    color: white;
+    	    text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(0, 170, 255, 0.5);
+        }
+
+        .logo-icon i {
+            color: white;
+            font-size: 20px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .hero {
+            padding: 6rem 0;
+            text-align: center;
+            background: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80') no-repeat center center/cover;
+            position: relative;
+            color: white;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid white;
+            margin-left: 1rem;
+        }
+        
+        section {
+            padding: 5rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: #666;
+        }
+        
+        .features {
+            background-color: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .benefits {
+            background-color: #f5f7fa;
+        }
+        
+        .benefits-container {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+        
+        .benefits-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .benefits-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .benefits-content {
+            flex: 1;
+        }
+        
+        .benefits-content h2 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-item-icon {
+            background-color: rgba(0, 86, 179, 0.1);
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .compliance {
+            background-color: white;
+        }
+        
+        .compliance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .compliance-card {
+            background-color: var(--light);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--primary);
+        }
+        
+        .compliance-card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .cta {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-align: center;
+            padding: 5rem 0;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0;
+            font-size: 0.9rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #fff;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-column ul li a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .benefits-container {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+
+         /* Responsive styling */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-icon {
+                display: block;
+                font-size: 1.5rem;
+                color: white;
+                cursor: pointer;
+            }
+            
+            .compliance-section {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .user-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+    <div class="container">
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                Finalyze
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#benefits">Benefits</a>
+                <a href="#compliance">Compliance</a>
+                <a href="#contact">Contact</a>
+		<a href="/login" class="login-button">Login</a>
+		
+
+            </div>
+            <a href="#demo" class="cta-button">Schedule Demo</a>
+        </nav>
+    </div>
+</header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Elevate Your Financial Communications with Confidence</h1>
+            <p>Streamline compliant communications for financial professionals and broker-dealers with our intelligent platform that ensures regulatory adherence while maintaining authentic, professional engagement.</p>
+            <div class="hero-buttons">
+                <a href="#demo" class="btn btn-primary">Schedule a Demo</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Powerful Features for Financial Professionals</h2>
+                <p>Our platform offers comprehensive tools to ensure your communications remain compliant without sacrificing effectiveness or personality.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>Intelligent Communication Assistance</h3>
+                    <p>Create timely, professional communications that are balanced and compliant while avoiding mundane or robotic language. Express your expertise with confidence.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Pre-Send Compliance Scan</h3>
+                    <p>Scan emails and communications before sending to ensure compliance with FINRA parameters, preventing potential issues from poorly worded content.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Social Media Enablement</h3>
+                    <p>Confidently advertise and engage on social media with guidance on what you can and cannot say, expanding your digital presence while maintaining compliance.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Continuous Learning</h3>
+                    <p>The more content you submit, the better you become at identifying and understanding how to communicate effectively within FINRA parameters.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Alternative Phrasing Suggestions</h3>
+                    <p>Select from a list of alternatives that better position your communications in newsletters, flyers, seminar materials, and social media posts.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Professional Security</h3>
+                    <p>Gain a sense of security for content that doesn't require pre-approval, without having to rely on memory or training from months ago.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="benefits-container">
+                <div class="benefits-image">
+                    <img src="https://images.unsplash.com/photo-1556155092-490a1ba16284?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80" alt="Financial professionals collaborating">
+                </div>
+                <div class="benefits-content">
+                    <h2>Benefits for Broker-Dealers</h2>
+                    <div class="benefit-item">
+                        <div class="benefit-item-icon">⏱️</div>
+                        <div>
+                            <h4>Time-Saving Workflow</h4>
+                            <p>Reduce time-consuming back-and-forth emails between advisors and supervisors, shortening approval cycles from weeks to minutes.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-item-icon">📋</div>
+                        <div>
+                            <h4>Reduced Supervisor Workload</h4>
+                            <p>Integrate appropriate language suggestions during content creation, significantly reducing the administrative review burden.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-item-icon">⚠️</div>
+                        <div>
+                            <h4>Smart Disclosure Recommendations</h4>
+                            <p>Automatically recommend firm and content-specific disclosures based on the material present in communications.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-item-icon">👁️</div>
+                        <div>
+                            <h4>Enhanced Supervision</h4>
+                            <p>Easily identify language that communicates or recommends specific products, allowing for more focused attention on high-risk content.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="compliance" id="compliance">
+        <div class="container">
+            <div class="section-title">
+                <h2>FINRA Compliance Made Simple</h2>
+                <p>Our platform addresses key FINRA parameters head-on, ensuring your communications meet regulatory standards.</p>
+            </div>
+            <div class="compliance-grid">
+                <div class="compliance-card">
+                    <h3>Fair, Balanced & Complete</h3>
+                    <p>Ensure all communications are fair, balanced, and complete without omitting material information, meeting FINRA's primary requirement.</p>
+                </div>
+                <div class="compliance-card">
+                    <h3>No Misleading Claims</h3>
+                    <p>Prevent false, misleading, promissory, exaggerated or unwarranted statements or claims in all communications.</p>
+                </div>
+                <div class="compliance-card">
+                    <h3>Performance Projection Guidelines</h3>
+                    <p>Adhere to FINRA's restrictions on predicting or projecting performance, with clear guidance on permitted exceptions.</p>
+                </div>
+                <div class="compliance-card">
+                    <h3>Transparent Material Information</h3>
+                    <p>Ensure material information is clearly presented and not buried in footnotes, maintaining transparency with clients.</p>
+                </div>
+                <div class="compliance-card">
+                    <h3>Balanced Risk & Benefit Treatment</h3>
+                    <p>Create clear statements that provide balanced treatment of risks and potential benefits in all client communications.</p>
+                </div>
+                <div class="compliance-card">
+                    <h3>Audience-Appropriate Content</h3>
+                    <p>Develop communications that are appropriate for the intended audience, meeting FINRA's audience suitability requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="demo">
+        <div class="container">
+            <h2>Ready to Transform Your Communications?</h2>
+            <p>Schedule a demo today and discover how our platform can help your financial professionals communicate with confidence while maintaining compliance.</p>
+            <a href="#contact" class="btn btn-primary">Schedule Demo</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Finalyze Compliance Technology</h3>
+                    <p>Helping firms and financial professionals feel comfortable with the way they communicate, advertise, and advise their clients, families, followers, and friends.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Solutions</h3>
+                    <ul>
+                        <li><a href="#">For Financial Advisors</a></li>
+                        <li><a href="#">For Broker-Dealers</a></li>
+                        <li><a href="#">For Compliance Officers</a></li>
+                        <li><a href="#">Enterprise Solutions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Case Studies</a></li>
+                        <li><a href="#">Compliance Guidelines</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column" id="contact">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><a href="mailto:info@complicomm.com">info@complicomm.com</a></li>
+                        <li><a href="tel:+18005551234">1-800-555-1234</a></li>
+                        <li><a href="#">Schedule a Demo</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Finalyze. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
