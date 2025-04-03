@@ -76,6 +76,36 @@ from torch.nn.functional import softmax
 flask_logger = logging.getLogger('werkzeug')
 flask_logger.setLevel(logging.WARNING)  # Change to INFO if you want to capture more details
 
+# At the global level of your app.py
+BERT_MODEL = None
+BERT_TOKENIZER = None
+MODEL_LOADED = False
+MODEL_PATH = 'finra_compliance_model.pth'  # Update this to your actual model path
+
+# Add this after your global variable declarations
+def get_bert_model():
+    global BERT_MODEL, BERT_TOKENIZER, MODEL_LOADED
+    if not MODEL_LOADED:
+        # Log start of model loading
+        app.logger.info("Initializing BERT model for compliance check...")
+        app.logger.info(f"Loading model file: {MODEL_PATH}")
+        
+        # Get file info for logging
+        if os.path.exists(MODEL_PATH):
+            modified_time = datetime.fromtimestamp(os.path.getmtime(MODEL_PATH))
+            app.logger.info(f"Last modified: {modified_time}")
+            file_size_mb = os.path.getsize(MODEL_PATH) / (1024 * 1024)
+            app.logger.info(f"File size: {file_size_mb:.2f} MB")
+        
+        # Load model and tokenizer
+        BERT_TOKENIZER = BertTokenizer.from_pretrained('bert-base-uncased')
+        BERT_MODEL = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
+        BERT_MODEL.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
+        BERT_MODEL.eval()
+        MODEL_LOADED = True
+    
+    return BERT_MODEL, BERT_TOKENIZER
+
 
 # Add this near the top of your file with other global variables
 session_token_usage = {
@@ -1117,12 +1147,9 @@ def check_compliance(content_by_page, disclosures):
 def perform_compliance_check(text, page_num=None):
     """Checks text compliance using BERT for flagging and GPT for verification."""
     try:
+        # Get the BERT model and tokenizer - this will load it if not already loaded
         global BERT_MODEL, BERT_TOKENIZER
-        if BERT_MODEL is None or BERT_TOKENIZER is None:
-            logger.info("Initializing BERT model for compliance check...")
-            if not initialize_bert():
-                logger.error("Failed to initialize BERT model")
-                raise Exception("Failed to initialize BERT model")
+        BERT_MODEL, BERT_TOKENIZER = get_bert_model()
 
         # If text is empty, contains only whitespace, or is just a bullet point
         if not text or text.isspace() or text == "•" or text == "\u2022":
@@ -1614,37 +1641,6 @@ AudioSegment.converter = "/opt/homebrew/bin/ffmpeg"
 
 # APP = FLASK(__name__)
 app = Flask(__name__)
-
-
-# At the global level of your app.py
-BERT_MODEL = None
-BERT_TOKENIZER = None
-MODEL_LOADED = False
-
-def get_bert_model():
-    global BERT_MODEL, BERT_TOKENIZER, MODEL_LOADED
-    if not MODEL_LOADED:
-        # Log start of model loading
-        app.logger.info("Initializing BERT model for compliance check...")
-        app.logger.info(f"Loading model file: {MODEL_PATH}")
-        
-        # Get file info for logging
-        if os.path.exists(MODEL_PATH):
-            modified_time = datetime.fromtimestamp(os.path.getmtime(MODEL_PATH))
-            app.logger.info(f"Last modified: {modified_time}")
-            file_size_mb = os.path.getsize(MODEL_PATH) / (1024 * 1024)
-            app.logger.info(f"File size: {file_size_mb:.2f} MB")
-        
-        # Load model and tokenizer
-        BERT_TOKENIZER = BertTokenizer.from_pretrained('bert-base-uncased')
-        BERT_MODEL = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
-        BERT_MODEL.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
-        BERT_MODEL.eval()
-        MODEL_LOADED = True
-    
-    return BERT_MODEL, BERT_TOKENIZER
-    
-
 
 def create_pdf_from_text(text, output_path):
     """Create a PDF file from transcribed text with better formatting"""
@@ -5099,9 +5095,7 @@ def check_custom_alternative():
     
     try:
         global BERT_MODEL, BERT_TOKENIZER
-        if BERT_MODEL is None or BERT_TOKENIZER is None:
-            if not initialize_bert():
-                raise Exception("Failed to initialize BERT model")
+        BERT_MODEL, BERT_TOKENIZER = get_bert_model()
         
         # First, run the text through BERT
         inputs = BERT_TOKENIZER(custom_text, 
@@ -5515,9 +5509,7 @@ def check_quick_text():
     
     try:
         global BERT_MODEL, BERT_TOKENIZER
-        if BERT_MODEL is None or BERT_TOKENIZER is None:
-            if not initialize_bert():
-                raise Exception("Failed to initialize BERT model")
+        BERT_MODEL, BERT_TOKENIZER = get_bert_model()
         
         # Split text into sentences for BERT analysis
         sentences = split_into_sentences(custom_text)
@@ -5965,11 +5957,12 @@ if __name__ == "__main__":
     # Load all disclosures from the custom file
     load_all_disclosures()
     
-    # Initialize BERT model
-    if not initialize_bert():
-        logger.error("Failed to initialize BERT model")
-    else:
-        logger.info("BERT model initialized successfully")
+# Initialize BERT model
+try:
+    BERT_MODEL, BERT_TOKENIZER = get_bert_model()
+    logger.info("BERT model initialized successfully")
+except Exception as e:
+    logger.error(f"Failed to initialize BERT model: {e}")
     
     # Get the port from the environment variable provided by Render
     port = int(os.environ.get('PORT', 5000))
