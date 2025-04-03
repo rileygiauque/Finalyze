@@ -10,7 +10,409 @@
 
     <style>
 
+/* Fix for dropdown being cut off at header boundary */
+.video-header, .site-header {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 100 !important; /* High enough but lower than dropdown */
+}
 
+#adminDropdown {
+  position: relative !important;
+  z-index: 1000 !important; /* Higher than header */
+}
+
+#adminDropdown .dropdown-menu {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  min-width: 200px !important;
+  background-color: white !important;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.3) !important;
+  border-radius: 4px !important;
+  padding: 10px 0 !important;
+  display: none !important;
+  z-index: 1001 !important; /* Higher than the dropdown parent */
+  max-height: none !important; /* Prevent height limitation */
+  clip: auto !important; /* Prevent clipping */
+}
+
+/* Ensure the header doesn't restrict its child elements */
+.header-container {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Make the navigation container also have visible overflow */
+.site-navigation {
+  overflow: visible !important;
+  position: relative !important;
+}
+
+/* Fix for the hover state */
+#adminDropdown:hover .dropdown-menu {
+  display: block !important;
+}
+
+.cta-button {
+    background: linear-gradient(45deg, var(--accent), var(--primary));
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    display: inline-block;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+}
+
+:root {
+    --primary: #0056b3;
+    --secondary: #00386b;
+    --accent: #00aaff;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    --success: #28a745;
+}
+
+/* Override the hover line effect specifically for the logout button */
+.site-navigation a.cta-button::after {
+    display: none; /* This removes the after pseudo-element that creates the line */
+}
+
+.site-navigation a.cta-button:hover::after {
+    width: 0; /* Ensure no width even on hover */
+}
+
+/* Header styling updates */
+.site-header {
+    padding: 15px 0;
+    background-color: #0c1631;
+}
+
+.header-container {
+    max-width: 1200px;
+    padding: 0 20px;
+}
+
+/* Navigation styling */
+.site-navigation ul {
+    gap: 30px;
+}
+
+.site-navigation a {
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.site-navigation a:hover {
+    color: #00aaff;
+}
+
+.site-navigation a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #00aaff;
+    transition: width 0.3s ease;
+}
+
+.site-navigation a:hover::after {
+    width: 100%;
+}
+
+/* Button styling in header */
+.login-button {
+    background-color: transparent;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.login-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.schedule-demo-button {
+    background: linear-gradient(90deg, #1a90ff, #0aaeff);
+    border: none;
+    border-radius: 30px;
+    color: #ffffff;
+    padding: 10px 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(10, 174, 255, 0.3);
+}
+
+.schedule-demo-button:hover {
+    background: linear-gradient(90deg, #0084ff, #00a2ff);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(10, 174, 255, 0.4);
+}
+
+/* Logo styling */
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-logo {
+    height: 40px;
+    width: auto;
+}
+
+/* Video header adjustments */
+.video-header {
+    background-color: #0c1631;
+    min-height: 80px;
+}
+
+
+/* Fix hero indicators positioning */
+.hero-carousel-indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 20px; /* Changed from 50px to 20px */
+    z-index: 3;
+    display: flex;
+    gap: 10px;
+}
+
+/* Style the Get Started button like in screenshot */
+.get-started-btn {
+    margin-top: 30px;
+    padding: 16px 40px; /* Increased padding */
+    background: #3c89ff; /* Solid color instead of gradient */
+    color: white;
+    border: none;
+    border-radius: 50px; /* More rounded */
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.get-started-btn:hover {
+    background: #0066ff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
+}
+
+/* Hero Section with Full-Width Dark Blue Overlay */
+.hero-section {
+    position: relative;
+    height: 500px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+/* Background Carousel */
+.hero-carousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.hero-slide.active {
+    opacity: 1;
+}
+
+/* Full-Width Dark Blue Overlay */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 20, 50, 0.85); /* Dark blue overlay */
+    z-index: 2;
+}
+
+/* Content Container */
+.hero-content-panel {
+    position: relative;
+    z-index: 3; /* Above the overlay */
+    text-align: center;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero-content {
+    text-align: center;
+    padding: 0 20px;
+    margin-bottom: 40px; /* Add space below the hero content */
+}
+
+/* Title Styling - Single Line */
+.hero-section h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 25px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    line-height: 1.2;
+    white-space: normal; /* Allow wrapping on small screens */
+}
+
+/* Accent Line */
+.accent-line {
+    height: 4px;
+    width: 100px;
+    background: linear-gradient(90deg, transparent, #00aaff, transparent);
+    margin: 0 auto 30px;
+    position: relative;
+    border-radius: 2px;
+}
+
+/* Fix for message carousel to properly show all text */
+.message-carousel-container {
+    margin: 30px auto;
+    text-align: center;
+    position: relative;
+    height: auto;
+    min-height: 80px; /* Increase minimum height to fit all text */
+    max-width: 900px;
+    width: 90%;
+}
+
+.message-carousel {
+    position: relative;
+    height: auto;
+    min-height: 80px; /* Increase this to match container */
+    overflow: visible;
+}
+
+.carousel-slide {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.95);
+    opacity: 0;
+    display: none;
+    padding: 15px 0; /* Increase padding to prevent text cutoff */
+    margin: 0;
+    transform: none;
+    transition: opacity 0.4s; /* Faster transition */
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    display: block; /* Show only active slide */
+}
+
+/* Add a fallback message that's always visible if JS fails */
+.message-carousel::after {
+    content: "Communicate with clarity and consistency...";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.95);
+    opacity: 0; /* Hidden by default */
+    z-index: -1;
+}
+
+/* If JS fails, show the fallback */
+.message-carousel:empty::after {
+    opacity: 1;
+}
+
+
+/* Get Started Button */
+.get-started-btn {
+    margin-top: 30px;
+    padding: 16px 40px;
+    background: #3c89ff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+}
+
+.get-started-btn:hover {
+    background: #0066ff;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.6);
+}
+
+/* Hide navigation dots */
+.hero-carousel-indicators, 
+.carousel-indicators {
+    display: none !important;
+}
+
+/* Responsive adjustments for single-line title */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 32px;
+    }
+    
+    .carousel-slide {
+        font-size: 18px;
+    }
+    
+    .message-carousel-container {
+        height: 50px; /* Taller on mobile to allow for text wrapping */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section h1 {
+        font-size: 28px;
+    }
+    
+    .carousel-slide {
+        font-size: 16px;
+    }
+}
 
 /* Add this to your existing CSS */
 .carousel-indicators {
@@ -409,16 +811,6 @@
 }
 
 
-
-
-
-/ HERE
-
-
-
-
-
-
 /* CSS for carousel subheading feature */
 .message-carousel-container {
     margin: 30px auto;
@@ -522,13 +914,15 @@
     z-index: 1;
 }
 
+/* Ensure the accent line is always visible */
 .accent-line {
     height: 4px;
-    width: 80px;
+    width: 100px;
     background: linear-gradient(90deg, transparent, #00aaff, transparent);
-    margin: 0 auto;
+    margin: 0 auto 30px;
     position: relative;
     border-radius: 2px;
+    display: block; /* Ensure it's always displayed */
 }
 
 .guidance-container {
@@ -784,6 +1178,7 @@
 }
 
 .dropdown .dropdown-menu {
+    
     display: none !important;
 }
 
@@ -1033,14 +1428,43 @@ form#uploadForm {
         }
 
 
-        body {
-    font-family: Arial, sans-serif;
+        /* Update your body styling to have the blue gradient as the background */
+body {
+    font-family: 'Montserrat', sans-serif;
     background: linear-gradient(135deg, #0b0d23, #004e98, #00aaff);
-    color: #ffffff; /* Ensure text is readable on a dark background */
+    color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh; /* So the gradient covers the full viewport */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Then make the header area transparent to show the gradient */
+.site-header {
+    background-color: rgba(12, 22, 49, 0.8); /* Semi-transparent dark blue */
+    width: 100%;
+}
+
+/* And adjust the content wrapper to continue the gradient */
+.content-wrapper {
+    width: 100%;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Adjust the header background to be transparent */
+.site-header {
+    background-color: rgba(12, 22, 49, 0.8); /* Semi-transparent dark blue */
+}
+
+/* Ensure text is white on dark backgrounds */
+.guidance-container, .instruction-item, .message-carousel-container {
+    color: white;
 }
 
         h1 {
@@ -1282,6 +1706,7 @@ select[multiple] option:checked::before {
 </head>
 <body>
 <!-- Web Header -->
+<!-- Video Header with Finalyze Logo -->
 <div class="video-header">
     <video autoplay muted loop class="background-video">
         <source src="globe.mp4" type="video/mp4">
@@ -1289,67 +1714,87 @@ select[multiple] option:checked::before {
     </video>
     <header class="site-header">
         <div class="header-container">
-            <!-- Logo and Site Title -->
+            <!-- Logo and Site Title - styled like the intro design -->
             <div class="logo-title">
-                <img src="/logo.png" alt="Logo" class="site-logo">
+                <a href="/" style="display: flex; align-items: center; text-decoration: none;">
+                    <div style="background: #4a90e2; width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shield-alt" style="color: white; font-size: 24px;"></i>
+                    </div>
+                    <span style="color: white; font-size: 24px; font-weight: bold; margin-left: 10px;">Finalyze</span>
+                </a>
             </div>
 
-
-
-            <!-- Navigation -->
-<nav class="site-navigation">
-    <ul>
-        <li>
-            <a href="/">Compliance Check</a>   
-        </li>
-        <li>
-            <a href="profile">Profile</a>
-            
-        </li>
-        <li class="dropdown">
+            <!-- Your current navigation links -->
+            <nav class="site-navigation">
+                <ul>
+                    <li>
+                        <a href="/">Compliance Check</a>   
+                    </li>
+                    <li>
+                        <a href="profile">Profile</a>
+                    </li>
+                    <li class="dropdown" id="adminDropdown" style="position: relative; z-index: 99999;">
     <a href="#" class="dropdown-toggle">Admin <i class="fa fa-caret-down"></i></a>
     
-    <ul class="dropdown-menu">
-        <li><a href="/manage-disclosures">Disclosures</a></li>
-        <li><a href="/assign-disclosures">Personalization</a></li>
-        <li><a href="/training">System Training</a></li>
-        <li><a href="/admin-access">Admin Access</a></li>
-    </ul>
+    <div class="dropdown-menu" style="position: absolute; z-index: 99999; background-color: white; box-shadow: 0 2px 15px rgba(0,0,0,0.3); border-radius: 4px; padding: 10px 0; min-width: 200px; top: 100%; left: 0; display: none;">
+        <div style="padding: 8px 16px;"><a href="/manage-disclosures" style="color: #333; text-decoration: none; display: block;">Disclosures</a></div>
+        <!-- <div style="padding: 8px 16px;"><a href="/assign-disclosures" style="color: #333; text-decoration: none; display: block;">Personalization</a></div> -->
+        <div style="padding: 8px 16px;"><a href="/training" style="color: #333; text-decoration: none; display: block;">System Training</a></div>
+        <div style="padding: 8px 16px;"><a href="/admin-access" style="color: #333; text-decoration: none; display: block;">User Access</a></div>
+    </div>
 </li>
-        <li>
-            <a href="login">Logout</a>
-            
-        </li>
-    </ul>
-</nav>
+                    <li>
+                        <a href="/intro" class="cta-button">Logout</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </header>
 </div>
 
-<!-- Add this after the video-header and before the uploadForm -->
-<div class="welcome-section">
-    <div class="welcome-header">
-        <div class="welcome-title-area">
-            <h1>Welcome to the Advisor Growth Portal</h1>
+<!-- Hero Section with Image Carousel and Full Overlay -->
+<div class="hero-section">
+    <!-- Background Image Carousel -->
+    <div class="hero-carousel">
+        <div class="hero-slide active" style="background-image: url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1551836022-d5d88e9218df?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');"></div>
+    </div>
+    
+    <!-- Content Panel - Centered content with no box -->
+    <div class="hero-content-panel">
+        <div class="hero-content">
+            <h1>Get Started Taking Your Financial Practice to the Next Level</h1>
             <div class="accent-line"></div>
+            
+            <!-- Message Carousel - Always visible -->
+            <div class="message-carousel-container">
+                <div class="message-carousel">
+                    <div class="carousel-slide active">Communicate with clarity and consistency...</div>
+                    <div class="carousel-slide">...in a way that isn't boring or cookie-cutter.</div>
+                    <div class="carousel-slide">Express yourself boldly and uniquely...</div>
+                    <div class="carousel-slide">...in a manner that doesn't put your credentials at risk.</div>
+                </div>
+            </div>
+            
+            <!-- Get Started Button -->
+            <button id="getStartedBtn" class="get-started-btn">Get Started</button>
         </div>
     </div>
+</div>
+    
 
-<!-- Replace the intro paragraph with this carousel -->
-<div class="message-carousel-container">
-    <div class="message-carousel">
-        <div class="carousel-slide active">Communicate with clarity and consistency...</div>
-        <div class="carousel-slide">...in a way that isn't boring or cookie-cutter.</div>
-        <div class="carousel-slide">Express yourself boldly and uniquely...</div>
-        <div class="carousel-slide">...in a manner that doesn't put your professional credentials at risk.</div>
-    </div>
-    <div class="carousel-indicators">
-        <span class="indicator active"></span>
-        <span class="indicator"></span>
-        <span class="indicator"></span>
-        <span class="indicator"></span>
+
+    <!-- Hero Carousel Indicators -->
+    <div class="hero-carousel-indicators">
+        <span class="hero-indicator active" data-index="0"></span>
+        <span class="hero-indicator" data-index="1"></span>
+        <span class="hero-indicator" data-index="2"></span>
+        <span class="hero-indicator" data-index="3"></span>
     </div>
 </div>
+        
+<div class="content-wrapper">
     
     <div class="guidance-container">
         <div class="guidance-content">
@@ -1436,9 +1881,9 @@ select[multiple] option:checked::before {
         <label for="file" style="color: #00aaff; font-size: 1.3em;">
   <strong>Select or Drop Files Here</strong>
 </label>
-        <input type="file" id="file" name="file" style="display: none;">
+        <input type="file" id="file" name="file" accept=".pdf,.mp4" style="display: none;">
         <p id="dragDropText" style="border: 2px dotted #00aaff; padding: 60px 10px; border-radius: 5px;">
-    Drop (PDF) file here
+    Drop (PDF or MP4) file here
 </p>
 
         <div id="fileName" class="file-name" style="display: none;"></div>
@@ -1495,8 +1940,200 @@ select[multiple] option:checked::before {
             <button type="submit" class="compliance-button" style="margin-top: 20px;">Upload and Check Compliance</button>
         </div>
     </form>
+</div>
 
     <script>
+
+// In your file upload success handler
+function handleUploadSuccess(response) {
+    if (response.is_mp4) {
+        // For MP4 files, call the process_video endpoint
+        fetch('/process_video', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                filename: response.filename
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                // Show a spinner or message while processing
+                loadingMessage.textContent = "Processing video file...";
+            }
+        })
+        .catch(error => {
+            console.error("Error processing video:", error);
+            alert('An error occurred while processing the video: ' + error.message);
+        });
+    } else {
+        // For other files, continue with normal processing
+        startProgressTracking(response.filename);
+    }
+}
+
+
+
+// Add this to your page's JavaScript (e.g., in a <script> tag or in your main JS file)
+document.addEventListener('DOMContentLoaded', function() {
+    // Listen for the form submission
+    const uploadForm = document.querySelector('form');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', function(e) {
+            const fileInput = this.querySelector('input[type="file"]');
+            if (fileInput && fileInput.files[0]) {
+                const filename = fileInput.files[0].name;
+                
+                // Check if file is MP4
+                if (filename.toLowerCase().endsWith('.mp4')) {
+                    // Store the filename in sessionStorage for later use
+                    sessionStorage.setItem('processingMp4File', filename);
+                    
+                    // Set a timeout to check if processing stalled
+                    setTimeout(function() {
+                        const progressElement = document.getElementById('progress-bar');
+                        if (progressElement && parseFloat(progressElement.style.width || '0') < 80) {
+                            // If progress is still under 80% after 10 seconds, force completion
+                            console.log('MP4 processing appears stalled, forcing completion');
+                            
+                            // Force set progress to 100%
+                            if (progressElement) progressElement.style.width = '100%';
+                            
+                            // Force redirect to process page
+                            const mp4Filename = sessionStorage.getItem('processingMp4File');
+                            if (mp4Filename) {
+                                window.location.href = `/process/${mp4Filename}`;
+                            }
+                        }
+                    }, 10000); // 10 second timeout
+                }
+            }
+        });
+    }
+    
+    // Check for redirect param in URL (fallback for server-side issues)
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectFile = urlParams.get('redirect_to_file');
+    if (redirectFile) {
+        window.location.href = `/process/${redirectFile}`;
+    }
+});
+
+
+// Combined carousel functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Background Image Carousel
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    let currentHeroSlide = 0;
+    
+    function showHeroSlide(index) {
+        heroSlides.forEach(slide => {
+            slide.classList.remove('active');
+        });
+        heroSlides[index].classList.add('active');
+    }
+    
+    function rotateHeroSlides() {
+        currentHeroSlide = (currentHeroSlide + 1) % heroSlides.length;
+        showHeroSlide(currentHeroSlide);
+        
+        // Clear the interval and restart after 2 seconds
+        clearInterval(heroIntervalId);
+        setTimeout(function() {
+            heroIntervalId = setInterval(rotateHeroSlides, 2000);
+        }, 2000);
+    }
+    
+    // Set 2-second rotation for background images
+    let heroIntervalId = setInterval(rotateHeroSlides, 2000);
+    
+    // Improved Text Carousel 
+    const textSlides = document.querySelectorAll('.message-carousel .carousel-slide');
+    
+    // If no slides are found, add a default one
+    if (textSlides.length === 0) {
+        const defaultSlide = document.createElement('div');
+        defaultSlide.className = 'carousel-slide active';
+        defaultSlide.textContent = 'Communicate with clarity and consistency...';
+        document.querySelector('.message-carousel').appendChild(defaultSlide);
+    }
+    
+    let currentTextSlide = 0;
+    
+    function showTextSlide(index) {
+        // Hide all slides first
+        textSlides.forEach(slide => {
+            slide.classList.remove('active');
+            slide.style.display = 'none'; // Ensure it's hidden
+        });
+        
+        // Show the current slide
+        if (textSlides[index]) {
+            textSlides[index].classList.add('active');
+            textSlides[index].style.display = 'block'; // Ensure it's visible
+        }
+    }
+    
+    function rotateTextSlides() {
+        currentTextSlide = (currentTextSlide + 1) % textSlides.length;
+        showTextSlide(currentTextSlide);
+        
+        // Clear the interval and restart after 2 seconds
+        clearInterval(textIntervalId);
+        setTimeout(function() {
+            textIntervalId = setInterval(rotateTextSlides, 2000);
+        }, 2000);
+    }
+    
+    // Show first slide initially
+    showTextSlide(currentTextSlide);
+    
+    // Set rotation with a 2-second delay
+    let textIntervalId = setInterval(rotateTextSlides, 2000);
+    
+    // Add a backup check to ensure at least one slide is visible
+    setTimeout(() => {
+        const activeSlides = document.querySelectorAll('.carousel-slide.active');
+        if (activeSlides.length === 0 && textSlides.length > 0) {
+            textSlides[0].classList.add('active');
+            textSlides[0].style.display = 'block';
+        }
+    }, 1000);
+    
+    // Get Started Button functionality
+    const getStartedBtn = document.getElementById('getStartedBtn');
+    if (getStartedBtn) {
+        getStartedBtn.addEventListener('click', function() {
+            const instructionsSection = document.querySelector('.usage-instructions');
+            if (instructionsSection) {
+                // Calculate position to scroll to (slightly above the element)
+                const rect = instructionsSection.getBoundingClientRect();
+                const scrollPosition = window.pageYOffset + rect.top - 120; // 120px above the element
+                
+                // Smooth scroll to that position
+                window.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+                
+                setTimeout(() => {
+                    const instructionItems = document.querySelectorAll('.instruction-item');
+                    instructionItems.forEach(item => {
+                        item.classList.add('highlight-box', 'pulse-animation-box');
+                        
+                        setTimeout(() => {
+                            item.classList.remove('highlight-box', 'pulse-animation-box');
+                        }, 2000);
+                    });
+                }, 500);
+            }
+        });
+    }
+});
 
 // Add this function to close all modals before opening a new one
 function closeAllModals() {
@@ -1737,6 +2374,9 @@ function analyzeFileDirectly() {
         return;
     }
     
+    const file = fileInput.files[0];
+    const fileName = file.name.toLowerCase();
+    
     // Show loading overlay
     loadingOverlay.style.visibility = 'visible';
     
@@ -1748,7 +2388,7 @@ function analyzeFileDirectly() {
     
     // Create FormData
     const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+    formData.append('file', file);
     
     // Upload the file first to get a filename for tracking
     fetch('/upload_file', { 
@@ -1758,16 +2398,23 @@ function analyzeFileDirectly() {
     .then(response => response.json())
     .then(data => {
         if (data.filename) {
-            console.log(`File uploaded for analysis: ${data.filename}`);
+            // Track progress for both PDF and MP4 files
+            trackProgress(data.filename);
             
-            // Start tracking progress
-            const trackingComplete = trackProgress(data.filename);
+            // For MP4 files, redirect to process page after showing some progress
+            if (fileName.endsWith('.mp4')) {
+                // Just wait 3 seconds to show some progress before redirecting
+                setTimeout(() => {
+                    window.location.href = `/process/${encodeURIComponent(data.filename)}`;
+                }, 3000);
+                return;
+            }
             
-            // Show progress for at least 3 seconds before redirecting
+            // Original code for PDF files continues here...
             setTimeout(() => {
                 // Create a new FormData for the main analysis request
                 const analysisFormData = new FormData();
-                analysisFormData.append('file', fileInput.files[0]);
+                analysisFormData.append('file', file);
                 analysisFormData.append('distribution_channel', JSON.stringify(['social_media']));
                 analysisFormData.append('distribution_method', JSON.stringify(['Written Social Media Post']));
                 
@@ -1790,8 +2437,7 @@ function analyzeFileDirectly() {
                     loadingOverlay.style.visibility = 'hidden';
                     alert('An error occurred while analyzing the file: ' + error.message);
                 });
-            }, 3000); // Wait 3 seconds to allow progress to display
-            
+            }, 3000);
         } else {
             throw new Error('File upload failed.');
         }
@@ -1802,11 +2448,15 @@ function analyzeFileDirectly() {
         alert('An error occurred while analyzing the file: ' + error.message);
     });
 }
+
+
+
+
 function selectFileAndSubmit() {
     // Create a temporary file input element
     const tempFileInput = document.createElement('input');
     tempFileInput.type = 'file';
-    tempFileInput.accept = '.pdf';
+    tempFileInput.accept = '.pdf,.mp4';
     
     // When a file is selected
     tempFileInput.onchange = function() {
@@ -2009,6 +2659,7 @@ function trackProgress(filename) {
         }, 2500); // Increase progress by 2% every 2.5 seconds
     }
 }
+
 async function analyzeTextForCompliance() {
     const textInput = document.getElementById("text_input").value.trim();
     const resultsDiv = document.getElementById("complianceResults");
@@ -2023,65 +2674,336 @@ async function analyzeTextForCompliance() {
     if (!textInput) {
         resultsDiv.textContent = "Please enter text to analyze.";
         resultsDiv.style.display = "block";
+        textAnalyzeButton.style.display = "inline-block"; // Show button again
         return;
     }
 
-    try {
-        // Use the existing check_custom_alternative endpoint
-        const response = await fetch("/check_custom_alternative", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ custom_text: textInput }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch compliance check results.");
+    // Create loading container
+    const loadingContainer = document.createElement("div");
+    loadingContainer.className = "loading-container";
+    
+    // Create dots loading indicator
+    const dotsIndicator = document.createElement("div");
+    dotsIndicator.className = "loading-dots-container";
+    dotsIndicator.innerHTML = `
+        <div class="loading-dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    `;
+    
+    // Create loading bar (initially hidden)
+    const loadingBar = document.createElement("div");
+    loadingBar.className = "loading-bar-container";
+    loadingBar.innerHTML = `
+        <div class="loading-bar-outer">
+            <div class="loading-bar-inner"></div>
+        </div>
+        <div class="loading-text">Analyzing compliance...</div>
+    `;
+    loadingBar.style.display = "none";
+    
+    // Add CSS for loading animations
+    const style = document.createElement('style');
+    style.textContent = `
+        .loading-container {
+            padding: 20px 0;
+            text-align: center;
         }
+        .loading-dots-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        .loading-dots {
+            display: flex;
+            align-items: center;
+        }
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            background-color: #007bff;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        .loading-bar-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .loading-bar-outer {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 0 auto 10px auto;
+            width: 80%;
+        }
+        .loading-bar-inner {
+            height: 100%;
+            background-color: #007bff;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        .loading-text {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .compliance-status-button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            font-weight: bold;
+        }
+        .initial-rationale {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .compliance-issue {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .check-another-button {
+            margin-top: 20px;
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Add loading elements to container
+    loadingContainer.appendChild(dotsIndicator);
+    loadingContainer.appendChild(loadingBar);
+    
+    // Add loading container to results div
+    resultsDiv.appendChild(loadingContainer);
+    resultsDiv.style.display = "block";
 
-        const data = await response.json();
+    // Function to display non-compliance
+    function displayNonCompliance(ruleViolation) {
+        // Clear the loading indicator
+        resultsDiv.innerHTML = "";
         
         // Create result container
         const resultContainer = document.createElement("div");
         resultContainer.className = "compliance-result";
         
-        // Add message
-        const messageElement = document.createElement("p");
-        messageElement.innerHTML = data.message || (data.compliant ? "No issues identified." : "<strong>Potential compliance issues identified.</strong>");
-        resultContainer.appendChild(messageElement);
+        // Create the non-compliant status button
+        const statusButton = document.createElement("button");
+        statusButton.className = "compliance-status-button";
+        statusButton.textContent = "✗ Potential Issues Identified";
+        statusButton.style.backgroundColor = "#dc3545";
         
-        // Add button
-        const button = document.createElement("button");
-        button.style.marginTop = "10px";
-        button.style.padding = "10px 15px";
-        button.style.border = "none";
-        button.style.borderRadius = "5px";
-        button.style.color = "#fff";
-        button.style.cursor = "pointer";
-        button.style.width = "100%";
-        button.style.boxSizing = "border-box";
+        // Create rationale based on the verification response
+        const initialRationale = document.createElement("div");
+        initialRationale.className = "initial-rationale";
         
-        if (data.compliant) {
-            button.textContent = "Appears Compliant";
-            button.style.backgroundColor = "#28a745";
+        // Extract rule information from the response
+        let ruleInfo = "";
+        if (ruleViolation.includes("Rule 2") || ruleViolation.includes("promissory") || ruleViolation.includes("guarantee")) {
+            ruleInfo = "This text contains promises or guarantees about performance which violates FINRA regulations. Consider using qualifying language like 'may' instead of 'will' and avoiding absolute statements.";
+        } else if (ruleViolation.includes("exaggerat")) {
+            ruleInfo = "This text contains exaggerated claims which violates FINRA regulations. Consider toning down superlatives and providing a more balanced view of potential outcomes.";
+        } else if (ruleViolation.includes("prediction") || ruleViolation.includes("forecast")) {
+            ruleInfo = "This text contains predictions about market movements which violates FINRA regulations. Consider acknowledging uncertainty and avoiding definitive statements about future outcomes.";
+        } else if (ruleViolation.includes("mislead")) {
+            ruleInfo = "This text could potentially mislead investors in a way that violates FINRA regulations. Consider providing more context and ensuring all claims are accurately represented.";
+        } else if (ruleViolation.includes("unbalanced")) {
+            ruleInfo = "This text presents an unbalanced view of risks and benefits which violates FINRA regulations. Consider giving equal weight to both risks and benefits to provide a more complete picture.";
         } else {
-            button.textContent = "Not Compliant";
-            button.style.backgroundColor = "#dc3545";
+            ruleInfo = "This text appears to violate FINRA compliance regulations and should be revised.";
         }
         
-        resultContainer.appendChild(button);
+        initialRationale.textContent = ruleInfo;
+        
+        // Create the check another text button
+        const checkAnotherButton = document.createElement("button");
+        checkAnotherButton.className = "check-another-button";
+        checkAnotherButton.textContent = "Check Another Text";
+        
+        checkAnotherButton.addEventListener("click", function() {
+            // Clear the results
+            resultsDiv.style.display = "none";
+            resultsDiv.innerHTML = "";
+            
+            // Clear the text input
+            document.getElementById("text_input").value = "";
+            
+            // Show the analyze button again
+            textAnalyzeButton.style.display = "inline-block";
+        });
+        
+        // Assemble the UI
+        resultContainer.appendChild(statusButton);
+        resultContainer.appendChild(initialRationale);
+        resultContainer.appendChild(checkAnotherButton);
         
         // Add to results div
+        resultsDiv.innerHTML = "";
         resultsDiv.appendChild(resultContainer);
-        resultsDiv.style.display = "block";
-        
-    } catch (error) {
+    }
+
+    // Variable to track if the API response has been received
+    let responseReceived = false;
+    let responseData = null;
+
+    // Start the API call
+    const apiPromise = fetch("/verification_only", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: textInput })
+    })
+    .then(response => response.json())
+    .then(data => {
+        responseReceived = true;
+        responseData = data;
+        return data;
+    })
+    .catch(error => {
         console.error("Error during compliance check:", error);
-        resultsDiv.textContent = "An error occurred. Please try again.";
-        resultsDiv.style.display = "block";
-        // Show analyze button again on error
-        textAnalyzeButton.style.display = "inline-block";
+        responseReceived = true;
+        throw error;
+    });
+
+    // Start the animation sequence with timing
+    // First, show dots for 2 seconds
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // If response already received, show results
+    if (responseReceived) {
+        handleResponse(responseData);
+        return;
+    }
+    
+    // Otherwise, switch to progress bar
+    dotsIndicator.style.display = "none";
+    loadingBar.style.display = "block";
+    
+    // Animate progress bar over 4 seconds
+    const barInner = loadingBar.querySelector(".loading-bar-inner");
+    const startTime = Date.now();
+    const duration = 4000; // 4 seconds
+    
+    const animateBar = () => {
+        if (responseReceived) {
+            barInner.style.width = "100%";
+            setTimeout(() => handleResponse(responseData), 250); // Small delay for visual completion
+            return;
+        }
+        
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration * 100, 99); // Cap at 99% until complete
+        
+        barInner.style.width = progress + "%";
+        
+        if (elapsed < duration) {
+            requestAnimationFrame(animateBar);
+        } else {
+            // After 4 seconds, if still no response, wait for it
+            // The bar will stay at 99% until response arrives
+            apiPromise.then(data => {
+                handleResponse(data);
+            }).catch(error => {
+                resultsDiv.innerHTML = "";
+                resultsDiv.textContent = "An error occurred. Please try again.";
+                resultsDiv.style.display = "block";
+                textAnalyzeButton.style.display = "inline-block";
+            });
+        }
+    };
+    
+    requestAnimationFrame(animateBar);
+    
+    // Function to handle the response data
+    function handleResponse(data) {
+        // Clear the loading indicator
+        resultsDiv.innerHTML = "";
+        
+        // Create result container
+        const resultContainer = document.createElement("div");
+        resultContainer.className = "compliance-result";
+        
+        if (data.is_non_compliant) {
+            // Display non-compliance with the verification response
+            displayNonCompliance(data.verification_response);
+        } else {
+            // Create compliant button
+            const statusButton = document.createElement("button");
+            statusButton.className = "compliance-status-button";
+            statusButton.textContent = "✓ Appears Compliant";
+            statusButton.style.backgroundColor = "#28a745";
+            
+            // Create message
+            const compliantMessage = document.createElement("div");
+            compliantMessage.className = "initial-rationale";
+            compliantMessage.style.backgroundColor = "#d4edda";
+            compliantMessage.style.borderColor = "#c3e6cb";
+            compliantMessage.style.color = "#155724";
+            compliantMessage.textContent = "No compliance issues found. This text appears to be compliant with FINRA regulations.";
+            
+            // Create the check another text button
+            const checkAnotherButton = document.createElement("button");
+            checkAnotherButton.className = "check-another-button";
+            checkAnotherButton.textContent = "Check Another Text";
+            
+            checkAnotherButton.addEventListener("click", function() {
+                resultsDiv.style.display = "none";
+                resultsDiv.innerHTML = "";
+                document.getElementById("text_input").value = "";
+                textAnalyzeButton.style.display = "inline-block";
+            });
+            
+            // Assemble the UI
+            resultContainer.appendChild(statusButton);
+            resultContainer.appendChild(compliantMessage);
+            resultContainer.appendChild(checkAnotherButton);
+            
+            // Add to results div
+            resultsDiv.appendChild(resultContainer);
+        }
     }
 }
+
+
+
+
+
 
         const fileUploadBox = document.getElementById('fileUploadBox');
         const fileInput = document.getElementById('file');
@@ -2167,27 +3089,47 @@ async function analyzeTextForCompliance() {
 
         async function handleFormSubmit(event) {
     event.preventDefault();
+    
+    // Check if the file is an MP4
+    const fileInput = document.getElementById('file');
+    if (fileInput.files.length > 0 && fileInput.files[0].name.toLowerCase().endsWith('.mp4')) {
+        // For MP4 files, immediately redirect to the process page after a short delay
+        const filename = fileInput.files[0].name;
+        
+        // Show loading overlay briefly
+        loadingOverlay.style.visibility = 'visible';
+        loadingMessage.textContent = "Processing MP4 file...";
+        
+        setTimeout(() => {
+            window.location.href = `/process/${encodeURIComponent(filename)}`;
+        }, 1000);
+        
+        return false;
+    }
+    
     loadingOverlay.style.visibility = 'visible';  // Show spinner
     const loadingPercentage = document.getElementById('loadingPercentage');
     let progress = 0;
+    stepIndex = 0; // Reset step index
     loadingMessage.textContent = loadingSteps[stepIndex]; // Start with the first message
     
     const interval = setInterval(() => {
-    stepIndex++;
-    progress = Math.floor((stepIndex / loadingSteps.length) * 100); // Calculate percentage
-    loadingPercentage.textContent = `${progress}% Complete`; // Update the displayed percentage
+        stepIndex++;
+        progress = Math.floor((stepIndex / loadingSteps.length) * 100); // Calculate percentage
+        loadingPercentage.textContent = `${progress}% Complete`; // Update the displayed percentage
 
-    if (stepIndex < loadingSteps.length) {
-        loadingMessage.textContent = loadingSteps[stepIndex];
-    } else {
-        clearInterval(interval); // Stop updating messages
-    }
-}, 1000); // Change message every second
+        if (stepIndex < loadingSteps.length) {
+            loadingMessage.textContent = loadingSteps[stepIndex];
+        } else {
+            clearInterval(interval); // Stop updating messages
+        }
+    }, 1000); // Change message every second
 
     const distributionMethod = document.getElementById('distribution_method').value;
     if (!distributionMethod) {
         alert("Please select a distribution method.");
         loadingOverlay.style.visibility = 'hidden';  // Hide spinner on error
+        clearInterval(interval);
         return false;
     }
 
@@ -2204,6 +3146,7 @@ async function analyzeTextForCompliance() {
         const pdfFile = await convertTextToPDF();
         if (!pdfFile) {
             loadingOverlay.style.visibility = 'hidden';
+            clearInterval(interval);
             return false;
         }
         formData.append('file', pdfFile);
@@ -2212,6 +3155,7 @@ async function analyzeTextForCompliance() {
     } else {
         alert("Please upload a file or enter text to analyze.");
         loadingOverlay.style.visibility = 'hidden';
+        clearInterval(interval);
         return false;
     }
 
@@ -2226,6 +3170,7 @@ async function analyzeTextForCompliance() {
         .catch(error => {
             console.error("Error submitting form:", error);
             loadingOverlay.style.visibility = 'hidden';
+            clearInterval(interval);
         });
 
     return false;
@@ -2467,7 +3412,7 @@ function showOverlayIfNoAdvisorType() {
 // that call overlay functions with just this ONE:
 document.addEventListener('DOMContentLoaded', showOverlayIfNoAdvisorType);
 
-// Carousel functionality with 6-second delay
+// Carousel functionality with 2-second pause
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.carousel-slide');
     const indicators = document.querySelectorAll('.indicator');
@@ -2494,6 +3439,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function rotateSlides() {
         currentSlide = (currentSlide + 1) % slides.length;
         showSlide(currentSlide);
+        
+        // Clear the interval and restart it after 2 seconds
+        clearInterval(intervalId);
+        setTimeout(function() {
+            intervalId = setInterval(rotateSlides, 2000);
+        }, 2000);
     }
     
     // Set up click handlers for indicators
@@ -2504,37 +3455,16 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Reset the rotation timer when manually clicking
             clearInterval(intervalId);
-            intervalId = setInterval(rotateSlides, 6000); // Restart with 6-second delay
+            intervalId = setInterval(rotateSlides, 2000); // Restart with 2-second delay
         });
     });
     
-    // Start auto-rotation with 6-second delay
-    intervalId = setInterval(rotateSlides, 6000);
-    
-    // Pause rotation when hovering over carousel
-    const carousel = document.querySelector('.message-carousel-container');
-    carousel.addEventListener('mouseenter', () => {
-        clearInterval(intervalId);
-    });
-    
-    carousel.addEventListener('mouseleave', () => {
-        clearInterval(intervalId);
-        // Restart the interval with 6-second delay
-        intervalId = setInterval(rotateSlides, 6000);
-    });
+    // Start auto-rotation with 2-second delay
+    intervalId = setInterval(rotateSlides, 2000);
     
     // Show first slide initially
     showSlide(currentSlide);
 });
-
-
-
-
-// HERE
-
-
-
-
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Admin access check script loaded');
@@ -2576,11 +3506,65 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.getElementById('adminDropdown').addEventListener('mouseenter', function() {
+    this.querySelector('.dropdown-menu').style.display = 'block';
+});
+
+document.getElementById('adminDropdown').addEventListener('mouseleave', function() {
+    this.querySelector('.dropdown-menu').style.display = 'none';
+});
+
     </script>
 </form>
-<footer style="text-align: center; margin-top: 40px; padding: 10px; font-size: 14px; color: #333;">
-    © 2025 Finalyze, LLC. All Rights Reserved.
+
+<!-- This likely comes after your "Get Started by Uploading..." section -->
+<div style="margin-bottom: 200px; width: 100%; clear: both;"></div>
+
+
+<!-- Replace your existing footer with this one -->
+<!-- Full-width footer -->
+<footer style="background-color: #2d3741; color: white; padding: 40px 0 20px; width: 100%; box-sizing: border-box; margin: 0; position: relative; left: 0; right: 0;">
+    <div style="max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; flex-wrap: wrap; justify-content: space-between;">
+        <div style="flex: 1; min-width: 200px; margin-bottom: 30px;">
+            <h3 style="font-size: 22px; margin-bottom: 20px; font-weight: 600;">Finalyze Compliance Technology</h3>
+            <p style="line-height: 1.6; color: rgba(255, 255, 255, 0.8);">Helping firms and financial professionals feel comfortable with the way they communicate, advertise, and advise their clients, families, followers, and friends.</p>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; margin-bottom: 30px;">
+            <h3 style="font-size: 22px; margin-bottom: 20px; font-weight: 600;">Solutions</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">For Financial Advisors</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">For Broker-Dealers</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">For Compliance Officers</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Enterprise Solutions</a></li>
+            </ul>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; margin-bottom: 30px;">
+            <h3 style="font-size: 22px; margin-bottom: 20px; font-weight: 600;">Resources</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Blog</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Case Studies</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Compliance Guidelines</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Documentation</a></li>
+            </ul>
+        </div>
+        
+        <div style="flex: 1; min-width: 200px; margin-bottom: 30px;">
+            <h3 style="font-size: 22px; margin-bottom: 20px; font-weight: 600;">Contact Us</h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                <li style="margin-bottom: 12px;"><a href="mailto:info@complicomm.com" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">info@complicomm.com</a></li>
+                <li style="margin-bottom: 12px;"><a href="tel:+18005551234" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">1-800-555-1234</a></li>
+                <li style="margin-bottom: 12px;"><a href="#" style="color: rgba(255, 255, 255, 0.8); text-decoration: none; transition: color 0.3s;">Schedule a Demo</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div style="text-align: center; padding-top: 30px; margin-top: 30px; border-top: 1px solid rgba(255, 255, 255, 0.1); width: 100%;">
+        <p style="color: rgba(255, 255, 255, 0.6);">&copy; 2025 Finalyze. All rights reserved.</p>
+    </div>
 </footer>
+
 <!-- Usage Reached Overlay -->
 <div id="usageReachedOverlay" 
      style="display: none; 
@@ -2635,8 +3619,8 @@ document.addEventListener('DOMContentLoaded', function() {
               text-align: center; 
               width: 300px;
               color: #333;">
-    <h2 style="margin-bottom: 10px;">Complete Profile Details</h2>
-    <p style="margin-bottom: 20px;">Visit Profile, Select Advisor Type to continue</p>
+    <h2 style="margin-bottom: 10px;">Please Complete Profile Details to Continue</h2>
+    <p style="margin-bottom: 20px;">Must Select Advisor Type</p>
     <button id="goToBillingButton"
             style="padding: 10px; 
                    border: none; 
