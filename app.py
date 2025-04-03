@@ -1616,6 +1616,36 @@ AudioSegment.converter = "/opt/homebrew/bin/ffmpeg"
 app = Flask(__name__)
 
 
+# At the global level of your app.py
+BERT_MODEL = None
+BERT_TOKENIZER = None
+MODEL_LOADED = False
+
+def get_bert_model():
+    global BERT_MODEL, BERT_TOKENIZER, MODEL_LOADED
+    if not MODEL_LOADED:
+        # Log start of model loading
+        app.logger.info("Initializing BERT model for compliance check...")
+        app.logger.info(f"Loading model file: {MODEL_PATH}")
+        
+        # Get file info for logging
+        if os.path.exists(MODEL_PATH):
+            modified_time = datetime.fromtimestamp(os.path.getmtime(MODEL_PATH))
+            app.logger.info(f"Last modified: {modified_time}")
+            file_size_mb = os.path.getsize(MODEL_PATH) / (1024 * 1024)
+            app.logger.info(f"File size: {file_size_mb:.2f} MB")
+        
+        # Load model and tokenizer
+        BERT_TOKENIZER = BertTokenizer.from_pretrained('bert-base-uncased')
+        BERT_MODEL = BertForSequenceClassification.from_pretrained('bert-base-uncased', num_labels=2)
+        BERT_MODEL.load_state_dict(torch.load(MODEL_PATH, map_location=torch.device('cpu')))
+        BERT_MODEL.eval()
+        MODEL_LOADED = True
+    
+    return BERT_MODEL, BERT_TOKENIZER
+    
+
+
 def create_pdf_from_text(text, output_path):
     """Create a PDF file from transcribed text with better formatting"""
     from reportlab.lib.pagesizes import letter
