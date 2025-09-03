@@ -20,6 +20,10 @@ app.secret_key = "supersecretkey"  # session + flash
 def intro():
     return render_template('intro.html')
 
+@app.route('/delete')
+def delete():
+    return render_template('delete.html')
+
 @app.route('/blog/why')
 def blog_why():
     return render_template('blog.html')
