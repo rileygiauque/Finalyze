@@ -410,5 +410,5 @@ def index():
     return render_template("index.html", active_tab="facebook")
 
 if __name__ == "__main__":
-    print("🚀 App running at http://localhost:8000/")
-    app.run(host="localhost", port=8000, debug=True)
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port, debug=False)
