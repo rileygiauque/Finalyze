@@ -54,15 +54,19 @@ def tw_logout():
 # ---------------- Config ----------------
 FACEBOOK_APP_ID = os.getenv("FACEBOOK_APP_ID", "1718598702202188")
 FACEBOOK_APP_SECRET = os.getenv("FACEBOOK_APP_SECRET", "ba989ffd85f6244abb11e80f4bcd5064")
-FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "http://localhost:8000/oauth/facebook/callback")
+#FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "http://localhost:8000/oauth/facebook/callback")
+# Online Version
+FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/facebook/callback")
 
 LINKEDIN_CLIENT_ID = os.getenv("LINKEDIN_CLIENT_ID", "7812hhk04l7tik")
 LINKEDIN_CLIENT_SECRET = os.getenv("LINKEDIN_CLIENT_SECRET", "WPL_AP1.EzmF4sKA4W89UiIT.4TGhmg==")
-LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "http://localhost:8000/oauth/linkedin/callback")
+#LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "http://localhost:8000/oauth/linkedin/callback")
+LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/linkedin/callback")
 
 TWITTER_CLIENT_ID = os.getenv("TWITTER_CLIENT_ID", "N2NkMEkwMmFtaVBCME5Iem05cWs6MTpjaQ")
 TWITTER_CLIENT_SECRET = os.getenv("TWITTER_CLIENT_SECRET", "FsEgafSt737aJwbCco3QJk3vqXq9lpq19LNwkgcJGes8yZqET3")
-TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "http://localhost:8000/oauth/twitter/callback")
+#TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "http://localhost:8000/oauth/twitter/callback")
+TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/twitter/callback")
 
 GRAPH_URL = "https://graph.facebook.com/v18.0"
 
