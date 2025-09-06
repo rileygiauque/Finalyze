@@ -103,7 +103,7 @@ APP_ENV = os.getenv("APP_ENV", "dev")
 if APP_ENV == "prod":
     FACEBOOK_REDIRECT_URI = os.getenv(
         "FACEBOOK_REDIRECT_URI",
-        "https://advisorcheck.onrender.com/oauth/facebook/callback"
+        "https://www.advisorcheck.onrender.com/oauth/facebook/callback"
     )
 else:
     FACEBOOK_REDIRECT_URI = os.getenv(
