@@ -11,8 +11,6 @@ from urllib.parse import urlencode
 from datetime import datetime
 from urllib.parse import urlencode
 
-
-
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # session + flash
 
@@ -54,23 +52,61 @@ def tw_logout():
     session.pop("tw_token", None)
     return ("", 204)
 
+@app.route("/debug/config")
+def debug_config():
+    return {
+        "APP_ENV": APP_ENV,
+        "FACEBOOK_REDIRECT_URI": FACEBOOK_REDIRECT_URI,
+        "FACEBOOK_APP_ID": FACEBOOK_APP_ID,
+        "Current Host": request.host_url
+    }
+
+@app.route("/deauthorize", methods=["GET", "POST"])
+def deauthorize():
+    if request.method == "GET":
+        # Serve the deauthorize.html template
+        return render_template("deauthorize.html")
+    else:
+        # Handle the POST request (actual deauthorization logic)
+        data = request.get_json(force=True, silent=True) or {}
+        user_id = data.get("user_id")
+
+        # Log the deauthorization
+        print(f"❌ User {user_id} deauthorized the app")
+
+        # You could also remove their tokens/data here if you're storing any
+        # For example:
+        # - Clear any stored Facebook tokens
+        # - Mark user as deauthorized in database
+        # - Clean up any cached data
+        
+        return "ok", 200
+
 
 # ---------------- Config ----------------
+APP_ENV = os.getenv("APP_ENV", "dev")
+
+if APP_ENV == "prod":
+    FACEBOOK_REDIRECT_URI = os.getenv(
+        "FACEBOOK_REDIRECT_URI",
+        "https://advisorcheck.onrender.com/oauth/facebook/callback"
+    )
+else:
+    FACEBOOK_REDIRECT_URI = os.getenv(
+        "FACEBOOK_REDIRECT_URI",
+        "https://www.advisorcheck.info/oauth/facebook/callback"
+    )
+
 FACEBOOK_APP_ID = os.getenv("FACEBOOK_APP_ID", "1718598702202188")
 FACEBOOK_APP_SECRET = os.getenv("FACEBOOK_APP_SECRET", "ba989ffd85f6244abb11e80f4bcd5064")
-#FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "http://localhost:8000/oauth/facebook/callback")
-# Online Version
-FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/facebook/callback")
 
 LINKEDIN_CLIENT_ID = os.getenv("LINKEDIN_CLIENT_ID", "7812hhk04l7tik")
 LINKEDIN_CLIENT_SECRET = os.getenv("LINKEDIN_CLIENT_SECRET", "WPL_AP1.EzmF4sKA4W89UiIT.4TGhmg==")
-#LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "http://localhost:8000/oauth/linkedin/callback")
-LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/linkedin/callback")
+LINKEDIN_REDIRECT_URI = os.getenv("LINKEDIN_REDIRECT_URI", "http://localhost:8000/oauth/linkedin/callback")
 
 TWITTER_CLIENT_ID = os.getenv("TWITTER_CLIENT_ID", "N2NkMEkwMmFtaVBCME5Iem05cWs6MTpjaQ")
 TWITTER_CLIENT_SECRET = os.getenv("TWITTER_CLIENT_SECRET", "FsEgafSt737aJwbCco3QJk3vqXq9lpq19LNwkgcJGes8yZqET3")
-#TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "http://localhost:8000/oauth/twitter/callback")
-TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "https://advisorcheck.onrender.com/oauth/twitter/callback")
+TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "http://localhost:8000/oauth/twitter/callback")
 
 GRAPH_URL = "https://graph.facebook.com/v18.0"
 
@@ -184,25 +220,114 @@ def fb_callback():
     flash("✅ Facebook login successful", "success")
     return redirect(url_for("index"))
 
+def resolve_page_id(page_input, token):
+    """Convert page name/URL to numeric page ID"""
+    cleaned = page_input.strip()
+    
+    # Extract page name from URL
+    if 'facebook.com' in cleaned:
+        match = re.search(r'facebook\.com/([^/?#&]+)', cleaned)
+        if match:
+            cleaned = match.group(1)
+    
+    # If it's already numeric, return as-is
+    if cleaned.isdigit():
+        return cleaned
+    
+    # Convert vanity name to page ID
+    url = f"{GRAPH_URL}/{cleaned}"
+    params = {'fields': 'id,name', 'access_token': token}
+    
+    try:
+        response = requests.get(url, params=params)
+        data = response.json()
+        
+        if 'id' in data:
+            print(f"✅ Resolved '{page_input}' to page ID: {data['id']} ({data.get('name', 'Unknown')})")
+            return data['id']
+        else:
+            print(f"❌ Could not resolve page: {data}")
+            return cleaned
+            
+    except Exception as e:
+        print(f"❌ Error resolving page ID: {e}")
+        return cleaned
+
+def fb_fetch_public_page_posts(page_id, token):
+    """Fetch public posts from any Facebook Page"""
+    posts = []
+    
+    url = f"{GRAPH_URL}/{page_id}/posts"
+    params = {
+        'access_token': token,
+        'fields': 'id,message,story,created_time,from,type,status_type',
+        'limit': 25
+    }
+    
+    try:
+        response = requests.get(url, params=params)
+        data = response.json()
+        
+        if 'error' in data:
+            print(f"❌ Error fetching posts for {page_id}: {data['error']}")
+            return posts
+            
+        for post in data.get('data', []):
+            message = post.get('message', post.get('story', '[No text content]'))
+            violations = check_compliance(message)
+            
+            posts.append({
+                'id': post.get('id'),
+                'message': message,
+                'created_time': format_date(post.get('created_time', '')),
+                'platform': 'facebook',
+                'violations': violations,
+                'post_type': post.get('type', 'unknown'),
+                'from': post.get('from', {}).get('name', 'Unknown')
+            })
+        
+        print(f"✅ Fetched {len(posts)} posts from page {page_id}")
+            
+    except Exception as e:
+        print(f"❌ Exception fetching posts from {page_id}: {e}")
+    
+    return posts
+
 def resolve_page_id_and_token(user_input, user_token):
+    """
+    Resolve a user-supplied Page ID/URL to (page_id, page_token).
+    Always prefer a Page token from /me/accounts if available.
+    """
     cleaned = user_input.strip()
+
+    # Handle full URLs (facebook.com/PageName)
     if "facebook.com" in cleaned:
         match = re.search(r"facebook\.com/([^/?#]+)", cleaned)
         if match:
             cleaned = match.group(1).strip("/")
+
+    # Convert vanity name -> numeric ID
     if not cleaned.isdigit():
         url = f"{GRAPH_URL}/{cleaned}"
         params = {"fields": "id,name", "access_token": user_token}
         res = requests.get(url, params=params).json()
+        print("👉 Vanity resolution:", res)
         if "id" in res:
             cleaned = res["id"]
 
+    # Try to get Page tokens for Pages the user manages
     url = f"{GRAPH_URL}/me/accounts"
     params = {"access_token": user_token}
     res = requests.get(url, params=params).json()
+    print("👉 Managed Pages:", res)
+
     for page in res.get("data", []):
         if page["id"] == cleaned:
+            print(f"✅ Found page token for {page['name']} ({page['id']})")
             return page["id"], page["access_token"]
+
+    # Fallback: return user token (limited unless PPCA approved)
+    print("⚠️ No page token found — falling back to user token")
     return cleaned, user_token
 
 def fb_fetch_posts(page_id, token):
@@ -231,17 +356,48 @@ def fb_collect():
         return redirect(url_for("index"))
 
     user_token = user_tokens["current_user"]
-    raw_ids = request.form.get("page_id", "").split(",")
-    resolved_ids_tokens = [resolve_page_id_and_token(uid, user_token) for uid in raw_ids if uid.strip()]
-
-    for pid, token in resolved_ids_tokens:
-        current_pages[pid] = token
-
+    raw_input = request.form.get("page_id", "").strip()
+    
+    if not raw_input:
+        flash("❌ Please enter a Facebook Page ID, username, or URL.", "error")
+        return redirect(url_for("index"))
+    
+    # Split multiple pages by comma
+    page_inputs = [p.strip() for p in raw_input.split(",") if p.strip()]
     all_posts = {}
-    for pid, token in resolved_ids_tokens:
-        all_posts[pid] = fb_fetch_posts(pid, token)
-
-    session["fb_last_page"] = raw_ids[0]
+    
+    for page_input in page_inputs:
+        try:
+            # First, resolve the page input to a numeric page ID
+            page_id = resolve_page_id(page_input, user_token)
+            
+            # Try to get managed page token first (for pages you admin)
+            managed_page_id, page_token = resolve_page_id_and_token(page_input, user_token)
+            
+            # If we got a page token (meaning you manage this page), use it
+            if page_token != user_token:
+                print(f"📋 Using page token for managed page: {page_id}")
+                posts = fb_fetch_posts(managed_page_id, page_token)  # Your existing function
+            else:
+                print(f"🌐 Using public access for page: {page_id}")
+                posts = fb_fetch_public_page_posts(page_id, user_token)  # New function
+            
+            if posts:
+                all_posts[page_id] = posts
+                current_pages[page_id] = page_token  # Store for create/delete operations
+                flash(f"✅ Fetched {len(posts)} posts from {page_input}", "success")
+            else:
+                flash(f"⚠️ No posts found for {page_input}. This could mean: "
+                      f"1) The page has no public posts, 2) The page doesn't exist, "
+                      f"or 3) The page restricts access.", "warning")
+                
+        except Exception as e:
+            flash(f"❌ Error fetching posts for {page_input}: {str(e)}", "error")
+            print(f"❌ Full error for {page_input}: {e}")
+    
+    if page_inputs:
+        session["fb_last_page"] = raw_input
+    
     return render_template("index.html", all_posts=all_posts, active_tab="facebook")
 
 @app.route("/facebook/create", methods=["POST"])
@@ -418,5 +574,5 @@ def index():
     return render_template("index.html", active_tab="facebook")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    print("🚀 App running at http://localhost:8000/")
+    app.run(host="localhost", port=8000, debug=True)
