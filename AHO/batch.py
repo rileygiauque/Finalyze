@@ -82,7 +82,21 @@ def deauthorize():
         
         return "ok", 200
 
-
+@app.route("/debug/token")  
+def debug_token():
+    if "current_user" not in user_tokens:
+        return {"status": "No token found", "connected": False}
+    
+    token = user_tokens["current_user"]
+    test_url = f"{GRAPH_URL}/me"
+    params = {"access_token": token}
+    
+    try:
+        response = requests.get(test_url, params=params)
+        return response.json()
+    except Exception as e:
+        return {"error": str(e)}
+    
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
 
@@ -187,6 +201,7 @@ def fb_login():
 @app.route("/oauth/facebook/callback")
 def fb_callback():
     code = request.args.get("code")
+    print(f"🔑 Facebook callback received. Code: {code[:20] if code else 'None'}...")
     if not code:
         flash("❌ No code returned from Facebook", "error")
         return redirect(url_for("index"))
@@ -198,8 +213,14 @@ def fb_callback():
         "client_secret": FACEBOOK_APP_SECRET,
         "code": code,
     }
+
+    print(f"📞 Requesting token from: {token_url}")
+    print(f"🔧 With redirect_uri: {FACEBOOK_REDIRECT_URI}")
+
     res = requests.get(token_url, params=params).json()
     access_token = res.get("access_token")
+    print(f"🎯 Token response: {res}")
+    print(f"🎟️ Final token stored: {user_tokens.get('current_user', 'None')[:20]}...")
 
     if not access_token:
         flash(f"❌ Failed to get token: {res}", "error")
@@ -213,10 +234,17 @@ def fb_callback():
         "client_secret": FACEBOOK_APP_SECRET,
         "fb_exchange_token": access_token,
     }
+    print(f"🔄 Exchanging for long-lived token...")
+
     res2 = requests.get(long_token_url, params=params).json()
+    print(f"🎯 Long token response: {res2}")
+
     long_token = res2.get("access_token", access_token)
+    print(f"🎟️ Long token: {long_token[:20] if long_token else 'None'}...")
 
     user_tokens["current_user"] = long_token
+    print(f"💾 Stored token. Current tokens: {list(user_tokens.keys())}")
+
     flash("✅ Facebook login successful", "success")
     return redirect(url_for("index"))
 
@@ -566,6 +594,8 @@ def tw_delete():
 
     flash("🗑️ Twitter post deleted (demo)", "success")
     return redirect(url_for("tw_collect"))
+
+
 
 
 # ---------------- Main ----------------
