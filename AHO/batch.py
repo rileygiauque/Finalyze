@@ -99,6 +99,7 @@ def debug_token():
     
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
+VERIFY_TOKEN = os.getenv("FB_VERIFY_TOKEN", "change-me")
 
 if APP_ENV == "prod":
     FACEBOOK_REDIRECT_URI = os.getenv(
@@ -187,6 +188,35 @@ def check_compliance(text):
 
 
 # ---------------- Facebook ----------------
+# Keep last-seen About for quick display/logging
+last_about = {}  # { page_id: {"about": "...", "fetched_at": "ISO"} }
+
+def get_page_token_for(page_id, user_token):
+    """Find a Page token for page_id using the current user token (if not in cache)."""
+    # 1) Try in-memory map first (you already fill current_pages on collect)
+    if page_id in current_pages:
+        return current_pages[page_id]
+
+    # 2) Fallback: look up via /me/accounts
+    url = f"{GRAPH_URL}/me/accounts"
+    res = requests.get(url, params={"access_token": user_token}).json()
+    for p in res.get("data", []):
+        if p.get("id") == page_id:
+            return p.get("access_token")
+    return None
+
+def fb_fetch_about_fields(page_id, page_token):
+    """Read only the Page's About/General Info style fields."""
+    fields = "about,general_info,description,company_overview,mission"
+    url = f"{GRAPH_URL}/{page_id}"
+    res = requests.get(url, params={"access_token": page_token, "fields": fields}).json()
+    # Prefer about/general_info; fall back to description if present
+    about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
+    last_about[page_id] = {"about": about_text, "fetched_at": datetime.utcnow().isoformat()+"Z"}
+    print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
+    return res
+
+
 @app.route("/oauth/facebook/login")
 def fb_login():
     fb_oauth_url = (
@@ -472,6 +502,62 @@ def fb_delete():
         flash(f"❌ Failed to delete post: {res}", "error")
 
     return redirect(url_for("fb_collect"), code=307)
+
+@app.route("/webhooks/facebook", methods=["GET", "POST"])
+def fb_webhook():
+    if request.method == "GET":
+        # Verification handshake
+        mode = request.args.get("hub.mode")
+        token = request.args.get("hub.verify_token")
+        challenge = request.args.get("hub.challenge")
+        if mode == "subscribe" and token == VERIFY_TOKEN:
+            return challenge, 200
+        return "Forbidden", 403
+
+    # POST: handle change notifications
+    data = request.get_json(force=True, silent=True) or {}
+    entries = data.get("entry", [])
+    for entry in entries:
+        page_id = str(entry.get("id"))
+        for change in entry.get("changes", []):
+            if change.get("field") == "general_info":
+                # 🔔 Only react to About/General Info changes
+                user_token = user_tokens.get("current_user")  # you already set this
+                page_token = get_page_token_for(page_id, user_token) if user_token else None
+                if page_token:
+                    fb_fetch_about_fields(page_id, page_token)
+                else:
+                    print(f"⚠️ No page token available to fetch About for page {page_id}")
+    return "ok", 200
+
+@app.route("/facebook/subscribe_about", methods=["POST"])
+def fb_subscribe_about():
+    if "current_user" not in user_tokens:
+        flash("❌ Please log in with Facebook first.", "error")
+        return redirect(url_for("index"))
+
+    user_token = user_tokens["current_user"]
+    raw_input = request.form.get("page_id", "").strip()
+    if not raw_input:
+        flash("❌ Enter a Page ID/URL first.", "error")
+        return redirect(url_for("index"))
+
+    # Reuse your helper to get numeric ID + page token
+    page_id, page_token = resolve_page_id_and_token(raw_input, user_token)
+    if not page_token or page_token == user_token:
+        flash("⚠️ Could not get a Page token (are you an admin of this Page?).", "warning")
+        return redirect(url_for("index"))
+
+    # Subscribe only to 'general_info' — the About field webhook
+    url = f"{GRAPH_URL}/{page_id}/subscribed_apps"
+    params = {"access_token": page_token, "subscribed_fields": "general_info"}
+    res = requests.post(url, params=params).json()
+    if res.get("success"):
+        flash("✅ Subscribed to About updates for this Page.", "success")
+    else:
+        flash(f"❌ Subscription failed: {res}", "error")
+    return redirect(url_for("index"))
+
 
 # ---------------- Mock LinkedIn ----------------
 mock_li_posts = [
