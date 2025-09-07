@@ -133,6 +133,7 @@ GRAPH_URL = "https://graph.facebook.com/v18.0"
 # ---------------- Globals ----------------
 user_tokens = {}
 current_pages = {}
+last_about = {} 
 
 # ---------------- Helpers ----------------
 def format_date(raw):
@@ -193,8 +194,6 @@ def check_compliance(text):
 
 
 # ---------------- Facebook ----------------
-# Keep last-seen About for quick display/logging
-last_about = {}  # { page_id: {"about": "...", "fetched_at": "ISO"} }
 
 def get_page_token_for(page_id, user_token):
     """Find a Page token for page_id using the current user token (if not in cache)."""
