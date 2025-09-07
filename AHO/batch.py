@@ -135,13 +135,17 @@ def fb_fetch_about_fields(page_id, page_token):
     # Get new about text
     about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
     
+    # Check compliance
+    violations = check_compliance(about_text)
+    
     # Keep history - add new entry to list instead of replacing
     if page_id not in last_about:
         last_about[page_id] = []
     
     last_about[page_id].append({
         "about": about_text, 
-        "fetched_at": datetime.utcnow().isoformat()+"Z"
+        "fetched_at": datetime.utcnow().isoformat()+"Z",
+        "violations": violations  # Add compliance check
     })
     
     print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
@@ -253,17 +257,6 @@ def get_page_token_for(page_id, user_token):
         if p.get("id") == page_id:
             return p.get("access_token")
     return None
-
-def fb_fetch_about_fields(page_id, page_token):
-    """Read only the Page's About/General Info style fields."""
-    fields = "about,general_info,description,company_overview,mission"
-    url = f"{GRAPH_URL}/{page_id}"
-    res = requests.get(url, params={"access_token": page_token, "fields": fields}).json()
-    # Prefer about/general_info; fall back to description if present
-    about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
-    last_about[page_id] = {"about": about_text, "fetched_at": datetime.utcnow().isoformat()+"Z"}
-    print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
-    return res
 
 
 @app.route("/oauth/facebook/login")
