@@ -135,6 +135,22 @@
           </div>
         </div>
 
+        <div class="card">
+  <div class="card-header"><h3>Watch About (General Info) Changes</h3></div>
+  <div class="card-body">
+    <form method="POST" action="/facebook/subscribe_about" class="form-inline">
+      <div class="input-group">
+        <input type="text" name="page_id" placeholder="Enter Page ID or link"
+               value="{{ session.fb_last_page if session.fb_last_page }}" class="form-input">
+        <button type="submit" class="btn btn-secondary">Subscribe</button>
+      </div>
+      <p style="margin-top:8px;color:#666;font-size:13px">
+        After subscribing, edit your Page’s About text — you’ll see updates in your server logs instantly.
+      </p>
+    </form>
+  </div>
+</div>
+
         {% if all_posts %}
           <div class="card">
             <div class="card-header">
