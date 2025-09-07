@@ -159,24 +159,6 @@
 
 
         <!-- Add this after the subscription form -->
-{% if about_changes %}
-<div class="card">
-  <div class="card-header">
-    <h3>Recent About Changes</h3>
-  </div>
-  <div class="card-body">
-    {% for page_id, data in about_changes.items() %}
-      <div class="post-item">
-        <div class="post-content">
-          <h4>Page ID: {{ page_id }}</h4>
-          <p><strong>About Text:</strong> {{ data.about or 'No about text' }}</p>
-          <div class="post-meta">Updated: {{ data.fetched_at }}</div>
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
 
 {% if about_changes %}
 <div class="card">
