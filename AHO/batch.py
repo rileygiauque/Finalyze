@@ -125,6 +125,27 @@ def fetch_current_about():
     
     # Redirect to about_changes to show the data
     return redirect(url_for("fb_about_changes"))
+
+def fb_fetch_about_fields(page_id, page_token):
+    """Read only the Page's About/General Info style fields."""
+    fields = "about,general_info,description,company_overview,mission"
+    url = f"{GRAPH_URL}/{page_id}"
+    res = requests.get(url, params={"access_token": page_token, "fields": fields}).json()
+    
+    # Get new about text
+    about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
+    
+    # Keep history - add new entry to list instead of replacing
+    if page_id not in last_about:
+        last_about[page_id] = []
+    
+    last_about[page_id].append({
+        "about": about_text, 
+        "fetched_at": datetime.utcnow().isoformat()+"Z"
+    })
+    
+    print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
+    return res
     
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
