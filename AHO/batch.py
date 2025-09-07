@@ -105,7 +105,6 @@ def debug_token():
     except Exception as e:
         return {"error": str(e)}
 
-# Just added
 @app.route("/facebook/fetch_current_about", methods=["POST"])
 def fetch_current_about():
     if "current_user" not in user_tokens:
@@ -124,7 +123,8 @@ def fetch_current_about():
     else:
         flash("❌ No page token found", "error")
     
-    return redirect(url_for("index"))
+    # Redirect to about_changes to show the data
+    return redirect(url_for("fb_about_changes"))
     
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
@@ -715,7 +715,7 @@ def tw_delete():
 # ---------------- Main ----------------
 @app.route("/")
 def index():
-    return render_template("index.html", active_tab="facebook")
+    return render_template("index.html", active_tab="facebook", about_changes=last_about)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
