@@ -178,6 +178,27 @@
 </div>
 {% endif %}
 
+{% if about_changes %}
+<div class="card">
+  <div class="card-header">
+    <h3>About Text History</h3>
+  </div>
+  <div class="card-body">
+    {% for page_id, history in about_changes.items() %}
+      <h4>Page ID: {{ page_id }}</h4>
+      {% for entry in history %}
+        <div class="post-item">
+          <div class="post-content">
+            <p><strong>About Text:</strong> {{ entry.about or 'No about text' }}</p>
+            <div class="post-meta">Fetched: {{ entry.fetched_at }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
         {% if all_posts %}
           <div class="card">
             <div class="card-header">
