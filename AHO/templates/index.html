@@ -143,6 +143,7 @@
         <input type="text" name="page_id" placeholder="Enter Page ID or link"
                value="{{ session.fb_last_page if session.fb_last_page }}" class="form-input">
         <button type="submit" class="btn btn-secondary">Subscribe</button>
+        <a href="/facebook/about_changes" class="btn btn-secondary">View About Changes</a>
       </div>
       <p style="margin-top:8px;color:#666;font-size:13px">
         After subscribing, edit your Page’s About text — you’ll see updates in your server logs instantly.
@@ -150,6 +151,26 @@
     </form>
   </div>
 </div>
+
+        <!-- Add this after the subscription form -->
+{% if about_changes %}
+<div class="card">
+  <div class="card-header">
+    <h3>Recent About Changes</h3>
+  </div>
+  <div class="card-body">
+    {% for page_id, data in about_changes.items() %}
+      <div class="post-item">
+        <div class="post-content">
+          <h4>Page ID: {{ page_id }}</h4>
+          <p><strong>About Text:</strong> {{ data.about or 'No about text' }}</p>
+          <div class="post-meta">Updated: {{ data.fetched_at }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
         {% if all_posts %}
           <div class="card">
@@ -574,6 +595,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
+
+// Auto-refresh About changes every 03 seconds
+setInterval(function() {
+    if (document.getElementById('facebook').style.display === 'block') {
+        // Only refresh if on Facebook tab
+        fetch('/facebook/about_changes')
+            .then(response => response.text())
+            .then(html => {
+                // Update just the about changes section
+                location.reload();
+            });
+    }
+}, 3000);
   </script>
 </body>
 </html>
