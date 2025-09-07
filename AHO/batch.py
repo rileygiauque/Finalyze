@@ -61,6 +61,11 @@ def debug_config():
         "Current Host": request.host_url
     }
 
+@app.route("/facebook/about_changes")
+def fb_about_changes():
+    """Display recent About field changes"""
+    return render_template("index.html", about_changes=last_about, active_tab="facebook")
+
 @app.route("/deauthorize", methods=["GET", "POST"])
 def deauthorize():
     if request.method == "GET":
