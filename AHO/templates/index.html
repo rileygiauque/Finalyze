@@ -192,6 +192,19 @@
             <p><strong>About Text:</strong> {{ entry.about or 'No about text' }}</p>
             <div class="post-meta">Fetched: {{ entry.fetched_at }}</div>
           </div>
+          <div class="post-status">
+            {% if entry.violations %}
+              <div class="status-badge error">
+                <div class="status-icon warning-icon"></div>
+                <span>Policy Violations: {{ entry.violations | join(', ') }}</span>
+              </div>
+            {% else %}
+              <div class="status-badge success">
+                <div class="status-icon check-icon"></div>
+                <span>Compliant</span>
+              </div>
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     {% endfor %}
