@@ -104,6 +104,27 @@ def debug_token():
         return response.json()
     except Exception as e:
         return {"error": str(e)}
+
+# Just added
+@app.route("/facebook/fetch_current_about", methods=["POST"])
+def fetch_current_about():
+    if "current_user" not in user_tokens:
+        flash("❌ Please log in first.", "error")
+        return redirect(url_for("index"))
+
+    user_token = user_tokens["current_user"]
+    page_id = request.form.get("page_id", "707640042443198")
+    
+    # Get page token
+    page_token = get_page_token_for(page_id, user_token)
+    if page_token:
+        # Fetch current About info
+        fb_fetch_about_fields(page_id, page_token)
+        flash("✅ Fetched current About text", "success")
+    else:
+        flash("❌ No page token found", "error")
+    
+    return redirect(url_for("index"))
     
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
