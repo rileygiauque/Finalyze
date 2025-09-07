@@ -64,6 +64,9 @@ def debug_config():
 @app.route("/facebook/about_changes")
 def fb_about_changes():
     """Display recent About field changes"""
+    print(f"🔍 Debug: last_about contains: {last_about}")
+    if not last_about:
+        print("⚠️ last_about is empty - no webhook data received yet")
     return render_template("index.html", about_changes=last_about, active_tab="facebook")
 
 @app.route("/deauthorize", methods=["GET", "POST"])
