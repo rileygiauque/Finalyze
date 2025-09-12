@@ -266,6 +266,15 @@
       </div>
     </div>
 
+	{% if ig_bio is defined %}
+  <div class="form-group" style="margin-top:10px">
+    <label style="font-size:13px;color:#666">
+      Current Bio for @{{ ig_bio_username or 'account' }}
+    </label>
+    <textarea class="form-textarea" readonly>{{ ig_bio }}</textarea>
+  </div>
+{% endif %}
+
     {% if ig_all_posts %}
       <div class="card">
         <div class="card-header">
