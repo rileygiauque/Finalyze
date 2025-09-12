@@ -170,6 +170,11 @@
                 <div class="form-group">
                   <textarea name="message" placeholder="What's on your mind?" class="form-textarea"></textarea>
                 </div>
+				  <div id="ig-check-status" class="post-status" style="margin:8px 0; display:none"></div>
+<button type="button" class="btn btn-secondary" id="ig-check-btn" style="margin-bottom:8px">
+  <div class="btn-icon"></div>
+  Check Compliance
+</button>
                 <button type="submit" class="btn btn-primary">
                   <div class="btn-icon publish-icon"></div>
                   Publish Post
@@ -784,6 +789,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
+
+// IG pre-post compliance check
+document.addEventListener('DOMContentLoaded', function () {
+  const btn = document.getElementById('ig-check-btn');
+  const status = document.getElementById('ig-check-status');
+  const textarea = document.querySelector('#instagram form[action="/instagram/create"] textarea[name="message"]');
+  if (!btn || !status || !textarea) return;
+
+  btn.addEventListener('click', async function () {
+    const fd = new FormData();
+    fd.append('text', textarea.value || '');
+    try {
+      const res = await fetch('/compliance/check', { method: 'POST', body: fd });
+      const data = await res.json();
+      const v = (data && data.violations) || [];
+      status.style.display = 'block';
+      status.innerHTML = v.length
+        ? `<div class="status-badge error"><div class="status-icon warning-icon"></div><span>Policy Violations: ${v.join(', ')}</span></div>`
+        : `<div class="status-badge success"><div class="status-icon check-icon"></div><span>Compliant</span></div>`;
+    } catch (e) {
+      status.style.display = 'block';
+      status.innerHTML = `<div class="status-badge error"><div class="status-icon warning-icon"></div><span>Could not check compliance.</span></div>`;
+    }
+  });
+});
+
   </script>
 </body>
 </html>
