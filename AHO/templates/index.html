@@ -366,6 +366,13 @@
             <div class="form-group">
               <textarea name="message" placeholder="What's on your mind?" class="form-textarea"></textarea>
             </div>
+
+			  <div id="ig-check-status" class="post-status" style="margin:8px 0; display:none"></div>
+<button type="button" class="btn btn-secondary" id="ig-check-btn" style="margin-bottom:8px">
+  <div class="btn-icon"></div>
+  Check Compliance
+</button>
+
 			  <div class="form-group" style="margin-top:8px">
   <input type="url" name="image_url"
          class="form-input"
@@ -800,18 +807,13 @@ document.addEventListener('DOMContentLoaded', function () {
   btn.addEventListener('click', async function () {
     const fd = new FormData();
     fd.append('text', textarea.value || '');
-    try {
-      const res = await fetch('/compliance/check', { method: 'POST', body: fd });
-      const data = await res.json();
-      const v = (data && data.violations) || [];
-      status.style.display = 'block';
-      status.innerHTML = v.length
-        ? `<div class="status-badge error"><div class="status-icon warning-icon"></div><span>Policy Violations: ${v.join(', ')}</span></div>`
-        : `<div class="status-badge success"><div class="status-icon check-icon"></div><span>Compliant</span></div>`;
-    } catch (e) {
-      status.style.display = 'block';
-      status.innerHTML = `<div class="status-badge error"><div class="status-icon warning-icon"></div><span>Could not check compliance.</span></div>`;
-    }
+    const res = await fetch('/compliance/check', { method: 'POST', body: fd });
+    const data = await res.json();
+    const v = (data && data.violations) || [];
+    status.style.display = 'block';
+    status.innerHTML = v.length
+      ? `<div class="status-badge error"><div class="status-icon warning-icon"></div><span>Policy Violations: ${v.join(', ')}</span></div>`
+      : `<div class="status-badge success"><div class="status-icon check-icon"></div><span>Compliant</span></div>`;
   });
 });
 
