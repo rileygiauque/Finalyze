@@ -204,8 +204,8 @@ def ig_subscribe_about():
         params={"fields": "biography,username,name", "access_token": token}
     ).json()
 
-    bio = res.get("biography")
-    if bio is None:
+    bio = res.get("biography") or ""
+    if bio == "":
         flash(f"❌ Could not read bio: {res}", "error")
         return redirect(url_for("index", active_tab="instagram"))
 
@@ -214,8 +214,10 @@ def ig_subscribe_about():
         "index.html",
         active_tab="instagram",
         ig_bio=bio,
-        ig_bio_username=res.get("username")
+        ig_bio_username=res.get("username"),
+        ig_bio_violations=check_compliance(bio)  # ← add this
     )
+
 
 
 
