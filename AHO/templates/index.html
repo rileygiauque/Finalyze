@@ -252,19 +252,19 @@
 
 	<!-- Instagram Comments -->
 <div class="card">
-  <div class="card-header">
-    <h3>Fetch Comments</h3>
-  </div>
+  <div class="card-header"><h3>Fetch All Comments (Recent)</h3></div>
   <div class="card-body">
-    <form method="POST" action="/instagram/comments" class="form-inline">
+    <form method="POST" action="/instagram/comments_all" class="form-inline">
       <div class="input-group">
-        <input type="text" name="media_id" class="form-input"
-               placeholder="Enter IG Media ID (e.g., 1790...)" required>
-        <button type="submit" class="btn btn-secondary">Fetch Comments</button>
+        <input type="text" name="account_id" class="form-input"
+               placeholder="IG User ID (blank = linked account)"
+               value="{{ session.ig_last_account if session.ig_last_account }}">
+        <button type="submit" class="btn btn-secondary">Fetch</button>
       </div>
     </form>
   </div>
 </div>
+
 
 {% if ig_comments is not none %}
   <div class="card">
