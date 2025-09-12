@@ -267,46 +267,47 @@
 </div>
 
 {% if ig_comments is not none %}
-
-<div class="card">
-  <div class="card-header">
-    <h3>Comments for Media: {{ ig_media_id }}</h3>
-  </div>
-  <div class="card-body">
-	  {% if ig_comments|length == 0 %}
+  <div class="card">
+    <div class="card-header">
+      <h3>Comments for Media: {{ ig_media_id }}</h3>
+    </div>
+    <div class="card-body">
+      {% if ig_comments|length == 0 %}
         <div class="empty-state">
           <h3>No comments found</h3>
           <p>Use a valid IG media ID with comments enabled.</p>
         </div>
       {% else %}
-    <div class="posts-grid">
-      {% for c in ig_comments %}
-      <div class="post-item">
-        <div class="post-content">
-          <p>{{ c.text }}</p>
-          <div class="post-meta">
-            {{ c.timestamp }}{% if c.username %} • {{ c.username }}{% endif %}
-          </div>
-        </div>
-        <div class="post-status">
-          {% if c.violations %}
-            <div class="status-badge error">
-              <div class="status-icon warning-icon"></div>
-              <span>Policy Violations: {{ c.violations | join(', ') }}</span>
+        <div class="posts-grid">
+          {% for c in ig_comments %}
+            <div class="post-item">
+              <div class="post-content">
+                <p>{{ c.text }}</p>
+                <div class="post-meta">
+                  {{ c.timestamp }}{% if c.username %} • {{ c.username }}{% endif %}
+                </div>
+              </div>
+              <div class="post-status">
+                {% if c.violations %}
+                  <div class="status-badge error">
+                    <div class="status-icon warning-icon"></div>
+                    <span>Policy Violations: {{ c.violations | join(', ') }}</span>
+                  </div>
+                {% else %}
+                  <div class="status-badge success">
+                    <div class="status-icon check-icon"></div>
+                    <span>Compliant</span>
+                  </div>
+                {% endif %}
+              </div>
             </div>
-          {% else %}
-            <div class="status-badge success">
-              <div class="status-icon check-icon"></div>
-              <span>Compliant</span>
-            </div>
-          {% endif %}
+          {% endfor %}
         </div>
-      </div>
-      {% endfor %}
+      {% endif %}
     </div>
   </div>
-</div>
 {% endif %}
+
 
 
     <div class="card">
