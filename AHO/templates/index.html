@@ -251,16 +251,16 @@
     </div>
 
     <div class="card">
-      <div class="card-header"><h3>Watch Bio (General Info) Changes</h3></div>
+      <div class="card-header"><h3>Check Bio</h3></div>
       <div class="card-body">
         <form method="POST" action="/instagram/subscribe_about" class="form-inline">
           <div class="input-group">
             <input type="text" name="account_id" placeholder="Enter IG User ID or link"
                    value="{{ session.ig_last_account if session.ig_last_account }}" class="form-input">
-            <button type="submit" class="btn btn-secondary">Subscribe</button>
+            <button type="submit" class="btn btn-secondary">Check</button>
           </div>
           <p style="margin-top:8px;color:#666;font-size:13px">
-            After subscribing, edit your IG bio — you’ll see updates in your server logs instantly.
+            After checking, edit your IG bio — you’ll see updates in your server logs instantly.
           </p>
         </form>
       </div>
