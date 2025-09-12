@@ -101,6 +101,11 @@ def ig_callback():
     flash("✅ Instagram connected", "success")
     return redirect(url_for("index", active_tab="instagram"))
 
+@app.route("/compliance/check", methods=["POST"])
+def compliance_check():
+    text = (request.form.get("text") or "").strip()
+    return {"violations": check_compliance(text)}  # ← calls your existing function
+
 @app.route("/instagram/comments_all", methods=["POST"])
 def ig_comments_all():
     token = session.get("ig_token")
