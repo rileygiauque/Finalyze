@@ -207,11 +207,16 @@ def ig_subscribe_about():
     bio = res.get("biography")
     if bio is None:
         flash(f"❌ Could not read bio: {res}", "error")
-    else:
-        flash(f"✅ Current bio for {res.get('username','account')}: {bio}", "success")
+        return redirect(url_for("index", active_tab="instagram"))
 
     session["ig_last_account"] = ig_user_id
-    return redirect(url_for("index", active_tab="instagram"))
+    return render_template(
+        "index.html",
+        active_tab="instagram",
+        ig_bio=bio,
+        ig_bio_username=res.get("username")
+    )
+
 
 
 
