@@ -863,14 +863,6 @@ def tw_delete():
     flash("🗑️ Twitter post deleted (demo)", "success")
     return redirect(url_for("tw_collect"))
 
-@app.route("/")
-def index():
-    # if you have templates/index.html
-    return render_template("index.html", active_tab=request.args.get("active_tab", "facebook"))
-    # or, if you prefer to land on /intro:
-    # return redirect(url_for("intro"))
-
-
 # ---------------- Main ----------------
 @app.route("/")
 def index():
