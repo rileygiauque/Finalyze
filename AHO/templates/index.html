@@ -273,7 +273,22 @@
     </label>
     <textarea class="form-textarea" readonly>{{ ig_bio }}</textarea>
   </div>
+
+  <div class="post-status" style="margin-top:8px">
+    {% if ig_bio_violations %}
+      <div class="status-badge error">
+        <div class="status-icon warning-icon"></div>
+        <span>Policy Violations: {{ ig_bio_violations | join(', ') }}</span>
+      </div>
+    {% else %}
+      <div class="status-badge success">
+        <div class="status-icon check-icon"></div>
+        <span>Compliant</span>
+      </div>
+    {% endif %}
+  </div>
 {% endif %}
+
 
     {% if ig_all_posts %}
       <div class="card">
