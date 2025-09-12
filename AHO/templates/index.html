@@ -266,12 +266,19 @@
   </div>
 </div>
 
-{% if ig_comments %}
+{% if ig_comments is not none %}
+
 <div class="card">
   <div class="card-header">
     <h3>Comments for Media: {{ ig_media_id }}</h3>
   </div>
   <div class="card-body">
+	  {% if ig_comments|length == 0 %}
+        <div class="empty-state">
+          <h3>No comments found</h3>
+          <p>Use a valid IG media ID with comments enabled.</p>
+        </div>
+      {% else %}
     <div class="posts-grid">
       {% for c in ig_comments %}
       <div class="post-item">
