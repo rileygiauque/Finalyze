@@ -113,22 +113,26 @@ def ig_comments():
         flash("❌ Enter a media_id.", "error")
         return redirect(url_for("index", active_tab="instagram"))
 
-    # Requires instagram_manage_comments
     res = requests.get(
         f"{GRAPH_URL}/{media_id}/comments",
-        params={"access_token": token, "fields": "id,text,timestamp,username"}
+        params={"access_token": token, "fields": "id,text,timestamp,username", "limit": 50}
     ).json()
 
-    comments = []
-    for c in res.get("data", []):
-        txt = c.get("text", "") or ""
-        comments.append({
-            "id": c.get("id"),
-            "text": txt,
-            "timestamp": format_date(c.get("timestamp", "")),
-            "username": c.get("username"),
-            "violations": check_compliance(txt)
-        })
+    if "error" in res:
+        msg = res["error"].get("message", "IG error")
+        flash(f"❌ Instagram error: {msg}", "error")
+        comments = []
+    else:
+        comments = []
+        for c in res.get("data", []):
+            txt = c.get("text") or ""
+            comments.append({
+                "id": c.get("id"),
+                "text": txt,
+                "timestamp": format_date(c.get("timestamp", "")),
+                "username": c.get("username"),
+                "violations": check_compliance(txt),
+            })
 
     return render_template(
         "index.html",
