@@ -188,8 +188,31 @@ def ig_delete():
 
 @app.route("/instagram/subscribe_about", methods=["POST"])
 def ig_subscribe_about():
-    flash("ℹ️ IG bio change webhooks aren’t available here.", "warning")
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    raw = (request.form.get("account_id") or "").strip()
+    ig_user_id = raw if raw.isdigit() else get_primary_ig_user_id(token)
+    if not ig_user_id:
+        flash("❌ No linked Instagram Business/Creator account found.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    res = requests.get(
+        f"{GRAPH_URL}/{ig_user_id}",
+        params={"fields": "biography,username,name", "access_token": token}
+    ).json()
+
+    bio = res.get("biography")
+    if bio is None:
+        flash(f"❌ Could not read bio: {res}", "error")
+    else:
+        flash(f"✅ Current bio for {res.get('username','account')}: {bio}", "success")
+
+    session["ig_last_account"] = ig_user_id
     return redirect(url_for("index", active_tab="instagram"))
+
 
 
 
