@@ -11,6 +11,10 @@ from urllib.parse import urlencode
 from datetime import datetime
 from urllib.parse import urlencode
 
+# ---------------- Instagram (mock) ----------------
+ig_posts_by_account = {}  # {account_id: [ {id, message, created_time, violations} ]}
+
+
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # session + flash
 
@@ -52,6 +56,143 @@ def tw_logout():
     session.pop("tw_token", None)
     return ("", 204)
 
+@app.route("/oauth/instagram/login")
+def ig_login():
+    ig_oauth_url = (
+        f"https://www.facebook.com/v18.0/dialog/oauth"
+        f"?client_id={FACEBOOK_APP_ID}"
+        f"&redirect_uri={IG_REDIRECT_URI}"
+        f"&scope={IG_SCOPES}"
+    )
+    return redirect(ig_oauth_url)
+
+@app.route("/oauth/instagram/callback")
+def ig_callback():
+    code = request.args.get("code")
+    if not code:
+        flash("❌ No code returned from Instagram/Facebook", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Exchange short-lived
+    token_url = f"{GRAPH_URL}/oauth/access_token"
+    params = {
+        "client_id": FACEBOOK_APP_ID,
+        "redirect_uri": IG_REDIRECT_URI,
+        "client_secret": FACEBOOK_APP_SECRET,
+        "code": code,
+    }
+    res = requests.get(token_url, params=params).json()
+    access_token = res.get("access_token")
+    if not access_token:
+        flash(f"❌ Failed to get IG token: {res}", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Exchange to long-lived
+    res2 = requests.get(
+        f"{GRAPH_URL}/oauth/access_token",
+        params={
+            "grant_type": "fb_exchange_token",
+            "client_id": FACEBOOK_APP_ID,
+            "client_secret": FACEBOOK_APP_SECRET,
+            "fb_exchange_token": access_token,
+        }
+    ).json()
+    session["ig_token"] = res2.get("access_token", access_token)
+    flash("✅ Instagram connected", "success")
+    return redirect(url_for("index", active_tab="instagram"))
+
+@app.route("/instagram/collect", methods=["POST"])
+def ig_collect():
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Use provided account_id if numeric; otherwise fall back to the linked IG account
+    raw = (request.form.get("account_id") or "").strip()
+    ig_user_id = raw if raw.isdigit() else get_primary_ig_user_id(token)
+    if not ig_user_id:
+        flash("❌ No linked Instagram Business/Creator account found.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    session["ig_last_account"] = ig_user_id
+    posts = ig_fetch_posts(ig_user_id, token)
+    return render_template("index.html", ig_all_posts={ig_user_id: posts}, active_tab="instagram")
+
+@app.route("/instagram/create", methods=["POST"])
+def ig_create():
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    ig_user_id = (request.form.get("account_id") or session.get("ig_last_account") or "").strip()
+    if not ig_user_id:
+        ig_user_id = get_primary_ig_user_id(token)
+    if not ig_user_id:
+        flash("❌ Missing IG account.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    caption = request.form.get("message", "")
+    image_url = (request.form.get("image_url") or "").strip()
+    if not image_url:
+        flash("❌ IG API requires an image_url to publish.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Step 1: create container
+    container = requests.post(
+        f"{GRAPH_URL}/{ig_user_id}/media",
+        params={"image_url": image_url, "caption": caption, "access_token": token}
+    ).json()
+
+    if "id" not in container:
+        flash(f"❌ Failed to create media: {container}", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Step 2: publish
+    publish = requests.post(
+        f"{GRAPH_URL}/{ig_user_id}/media_publish",
+        params={"creation_id": container["id"], "access_token": token}
+    ).json()
+
+    if "id" in publish:
+        v = check_compliance(caption)
+        if v:
+            flash(f"⚠️ Compliance issues detected: {', '.join(v)}", "error")
+        flash("✅ Instagram post published.", "success")
+    else:
+        flash(f"❌ Publish failed: {publish}", "error")
+
+    # Re-run collect to refresh list
+    return redirect(url_for("ig_collect"), code=307)
+
+@app.route("/instagram/delete", methods=["POST"])
+def ig_delete():
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    post_id = request.form.get("post_id", "")
+    if not post_id:
+        flash("❌ Missing post_id.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    res = requests.delete(f"{GRAPH_URL}/{post_id}", params={"access_token": token}).json()
+    if res.get("success"):
+        flash("🗑️ Instagram post deleted.", "success")
+    else:
+        flash(f"❌ Delete failed: {res}", "error")
+
+    return redirect(url_for("ig_collect"), code=307)
+
+@app.route("/instagram/subscribe_about", methods=["POST"])
+def ig_subscribe_about():
+    flash("ℹ️ IG bio change webhooks aren’t available here.", "warning")
+    return redirect(url_for("index", active_tab="instagram"))
+
+
+
 @app.route("/debug/config")
 def debug_config():
     return {
@@ -60,14 +201,6 @@ def debug_config():
         "FACEBOOK_APP_ID": FACEBOOK_APP_ID,
         "Current Host": request.host_url
     }
-
-@app.route("/facebook/about_changes")
-def fb_about_changes():
-    """Display recent About field changes"""
-    print(f"🔍 Debug: last_about contains: {last_about}")
-    if not last_about:
-        print("⚠️ last_about is empty - no webhook data received yet")
-    return render_template("index.html", about_changes=last_about, active_tab="facebook")
 
 @app.route("/deauthorize", methods=["GET", "POST"])
 def deauthorize():
@@ -104,52 +237,6 @@ def debug_token():
         return response.json()
     except Exception as e:
         return {"error": str(e)}
-
-@app.route("/facebook/fetch_current_about", methods=["POST"])
-def fetch_current_about():
-    if "current_user" not in user_tokens:
-        flash("❌ Please log in first.", "error")
-        return redirect(url_for("index"))
-
-    user_token = user_tokens["current_user"]
-    page_id = request.form.get("page_id", "707640042443198")
-    
-    # Get page token
-    page_token = get_page_token_for(page_id, user_token)
-    if page_token:
-        # Fetch current About info
-        fb_fetch_about_fields(page_id, page_token)
-        flash("✅ Fetched current About text", "success")
-    else:
-        flash("❌ No page token found", "error")
-    
-    # Redirect to about_changes to show the data
-    return redirect(url_for("fb_about_changes"))
-
-def fb_fetch_about_fields(page_id, page_token):
-    """Read only the Page's About/General Info style fields."""
-    fields = "about,general_info,description,company_overview,mission"
-    url = f"{GRAPH_URL}/{page_id}"
-    res = requests.get(url, params={"access_token": page_token, "fields": fields}).json()
-    
-    # Get new about text
-    about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
-    
-    # Check compliance
-    violations = check_compliance(about_text)
-    
-    # Keep history - add new entry to list instead of replacing
-    if page_id not in last_about:
-        last_about[page_id] = []
-    
-    last_about[page_id].append({
-        "about": about_text, 
-        "fetched_at": datetime.utcnow().isoformat()+"Z",
-        "violations": violations  # Add compliance check
-    })
-    
-    print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
-    return res
     
 # ---------------- Config ----------------
 APP_ENV = os.getenv("APP_ENV", "dev")
@@ -179,10 +266,19 @@ TWITTER_REDIRECT_URI = os.getenv("TWITTER_REDIRECT_URI", "http://localhost:8000/
 
 GRAPH_URL = "https://graph.facebook.com/v18.0"
 
+# ---------------- Instagram Config ----------------
+# Uses same Facebook App ID/Secret; separate redirect just for IG callback
+if APP_ENV == "prod":
+    IG_REDIRECT_URI = os.getenv("IG_REDIRECT_URI", "https://www.advisorcheck.onrender.com/oauth/instagram/callback")
+else:
+    IG_REDIRECT_URI = os.getenv("IG_REDIRECT_URI", "http://localhost:8000/oauth/instagram/callback")
+
+IG_SCOPES = "instagram_basic,instagram_manage_comments,instagram_manage_insights,instagram_content_publish,pages_show_list,pages_read_engagement"
+
+
 # ---------------- Globals ----------------
 user_tokens = {}
 current_pages = {}
-last_about = {} 
 
 # ---------------- Helpers ----------------
 def format_date(raw):
@@ -193,6 +289,37 @@ def format_date(raw):
         return dt.strftime("%b %d, %Y %I:%M %p")
     except Exception:
         return raw
+
+def get_primary_ig_user_id(user_token):
+    """Return the IG Business/Creator user id linked to one of the user's Pages."""
+    url = f"{GRAPH_URL}/me/accounts"
+    params = {"access_token": user_token, "fields": "name,access_token,instagram_business_account"}
+    res = requests.get(url, params=params).json()
+    for page in res.get("data", []):
+        ig = page.get("instagram_business_account")
+        if ig and ig.get("id"):
+            return ig["id"]
+    return None
+
+def ig_fetch_posts(ig_user_id, token):
+    posts = []
+    url = f"{GRAPH_URL}/{ig_user_id}/media"
+    params = {"access_token": token, "fields": "id,caption,timestamp,permalink,media_type"}
+    try:
+        data = requests.get(url, params=params).json()
+        for m in data.get("data", []):
+            msg = m.get("caption", "[No caption]")
+            posts.append({
+                "id": m.get("id"),
+                "message": msg,
+                "created_time": format_date(m.get("timestamp", "")),
+                "platform": "instagram",
+                "violations": check_compliance(msg)
+            })
+    except Exception as e:
+        print(f"❌ IG fetch error: {e}")
+    return posts
+
 
 # ---------------- Compliance Checker ----------------
 
@@ -243,6 +370,8 @@ def check_compliance(text):
 
 
 # ---------------- Facebook ----------------
+# Keep last-seen About for quick display/logging
+last_about = {}  # { page_id: {"about": "...", "fetched_at": "ISO"} }
 
 def get_page_token_for(page_id, user_token):
     """Find a Page token for page_id using the current user token (if not in cache)."""
@@ -257,6 +386,17 @@ def get_page_token_for(page_id, user_token):
         if p.get("id") == page_id:
             return p.get("access_token")
     return None
+
+def fb_fetch_about_fields(page_id, page_token):
+    """Read only the Page's About/General Info style fields."""
+    fields = "about,general_info,description,company_overview,mission"
+    url = f"{GRAPH_URL}/{page_id}"
+    res = requests.get(url, params={"access_token": page_token, "fields": fields}).json()
+    # Prefer about/general_info; fall back to description if present
+    about_text = res.get("about") or res.get("general_info") or res.get("description") or ""
+    last_about[page_id] = {"about": about_text, "fetched_at": datetime.utcnow().isoformat()+"Z"}
+    print(f"ℹ️ [About updated] Page {page_id}: {about_text[:200]}")
+    return res
 
 
 @app.route("/oauth/facebook/login")
@@ -723,7 +863,12 @@ def tw_delete():
     flash("🗑️ Twitter post deleted (demo)", "success")
     return redirect(url_for("tw_collect"))
 
-
+@app.route("/")
+def index():
+    # if you have templates/index.html
+    return render_template("index.html", active_tab=request.args.get("active_tab", "facebook"))
+    # or, if you prefer to land on /intro:
+    # return redirect(url_for("intro"))
 
 
 # ---------------- Main ----------------
