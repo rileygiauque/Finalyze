@@ -271,7 +271,7 @@ GRAPH_URL = "https://graph.facebook.com/v18.0"
 if APP_ENV == "prod":
     IG_REDIRECT_URI = os.getenv("IG_REDIRECT_URI", "https://www.advisorcheck.onrender.com/oauth/instagram/callback")
 else:
-    IG_REDIRECT_URI = os.getenv("IG_REDIRECT_URI", "http://www.advisorcheck.info/oauth/instagram/callback")
+    IG_REDIRECT_URI = os.getenv("IG_REDIRECT_URI", "https://www.advisorcheck.info/oauth/instagram/callback")
 
 IG_SCOPES = "instagram_basic,instagram_manage_comments,instagram_manage_insights,instagram_content_publish,pages_show_list,pages_read_engagement"
 
