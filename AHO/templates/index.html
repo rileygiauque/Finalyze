@@ -54,6 +54,8 @@
                     <li><a href="#facebook">Facebook</a></li>
                     <li><a href="#linkedin">LinkedIn</a></li>
                     <li><a href="#twitter">Twitter</a></li>
+		    <li><a href="#instagram">Instagram</a></li>
+
                                         </li>
                     
                 </ul>
@@ -107,6 +109,11 @@
           <div class="tab-icon twitter-icon"></div>
           <span>Twitter</span>
         </button>
+	<button class="tab-link {% if active_tab == 'instagram' %}active{% endif %}" onclick="openTab(event,'instagram')">
+  <div class="tab-icon instagram-icon"></div>
+  <span>Instagram</span>
+</button>
+
       </nav>
     </div>
 
@@ -135,64 +142,22 @@
           </div>
         </div>
 
-        <div class="card">
-  <div class="card-header"><h3>General Info Updates</h3></div>
+	<div class="card">
+  <div class="card-header"><h3>Watch About (General Info) Changes</h3></div>
   <div class="card-body">
     <form method="POST" action="/facebook/subscribe_about" class="form-inline">
       <div class="input-group">
         <input type="text" name="page_id" placeholder="Enter Page ID or link"
                value="{{ session.fb_last_page if session.fb_last_page }}" class="form-input">
-
-        
-        </div>
+        <button type="submit" class="btn btn-secondary">Subscribe</button>
+      </div>
       <p style="margin-top:8px;color:#666;font-size:13px">
         After subscribing, edit your Page’s About text — you’ll see updates in your server logs instantly.
       </p>
     </form>
-
-    <!-- Separate form for Fetch Current About -->
-    <form method="POST" action="/facebook/fetch_current_about" class="form-inline" style="margin-top: 10px;">
-      <button type="submit" class="btn btn-secondary">Fetch Current About</button>
-    </form>
   </div>
 </div>
 
-
-        <!-- Add this after the subscription form -->
-
-{% if about_changes %}
-<div class="card">
-  <div class="card-header">
-    <h3>Page Updates</h3>
-  </div>
-  <div class="card-body">
-    {% for page_id, history in about_changes.items() %}
-      <h4>Page ID: {{ page_id }}</h4>
-      {% for entry in history %}
-        <div class="post-item">
-          <div class="post-content">
-            <p><strong>Bio Update:</strong> {{ entry.about or 'No about text' }}</p>
-            <div class="post-meta">Fetched: {{ entry.fetched_at }}</div>
-          </div>
-          <div class="post-status">
-            {% if entry.violations %}
-              <div class="status-badge error">
-                <div class="status-icon warning-icon"></div>
-                <span>Policy Violations: {{ entry.violations | join(', ') }}</span>
-              </div>
-            {% else %}
-              <div class="status-badge success">
-                <div class="status-icon check-icon"></div>
-                <span>Compliant</span>
-              </div>
-            {% endif %}
-          </div>
-        </div>
-      {% endfor %}
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
 
         {% if all_posts %}
           <div class="card">
@@ -258,6 +223,114 @@
         {% endif %}
       </div>
     </div>
+
+<!-- Instagram Tab -->
+<div id="instagram" class="tab-content {% if active_tab == 'instagram' %}active{% endif %}" style="{% if active_tab == 'instagram' %}display:block;{% else %}display:none;{% endif %}">
+  <div class="content-header">
+    <h2>Instagram Management</h2>
+    <a href="/oauth/instagram/login" class="btn btn-primary">
+      <div class="btn-icon auth-icon"></div>
+      Connect Instagram
+    </a>
+  </div>
+
+  <div class="content-body">
+    <div class="card">
+      <div class="card-header">
+        <h3>Account Analytics</h3>
+      </div>
+      <div class="card-body">
+        <form method="POST" action="/instagram/collect" class="form-inline">
+          <div class="input-group">
+            <input type="text" name="account_id" placeholder="Enter IG User ID or link"
+                   value="{{ session.ig_last_account if session.ig_last_account }}" class="form-input">
+            <button type="submit" class="btn btn-secondary">Fetch Posts</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h3>Watch Bio (General Info) Changes</h3></div>
+      <div class="card-body">
+        <form method="POST" action="/instagram/subscribe_about" class="form-inline">
+          <div class="input-group">
+            <input type="text" name="account_id" placeholder="Enter IG User ID or link"
+                   value="{{ session.ig_last_account if session.ig_last_account }}" class="form-input">
+            <button type="submit" class="btn btn-secondary">Subscribe</button>
+          </div>
+          <p style="margin-top:8px;color:#666;font-size:13px">
+            After subscribing, edit your IG bio — you’ll see updates in your server logs instantly.
+          </p>
+        </form>
+      </div>
+    </div>
+
+    {% if ig_all_posts %}
+      <div class="card">
+        <div class="card-header">
+          <h3>Create New Post</h3>
+        </div>
+        <div class="card-body">
+          <form method="POST" action="/instagram/create">
+            <input type="hidden" name="account_id" value="{{ session.ig_last_account }}">
+            <div class="form-group">
+              <textarea name="message" placeholder="What's on your mind?" class="form-textarea"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <div class="btn-icon publish-icon"></div>
+              Publish Post
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {% for aid, posts in ig_all_posts.items() %}
+        <div class="card">
+          <div class="card-header">
+            <h3>Posts for Account: {{ aid }}</h3>
+          </div>
+          <div class="card-body">
+            <div class="posts-grid">
+              {% for p in posts %}
+                <div class="post-item">
+                  <div class="post-content">
+                    <p>{{ p.message }}</p>
+                    <div class="post-meta">{{ p.created_time }}</div>
+                  </div>
+                  <div class="post-status">
+                    {% if p.violations %}
+                      <div class="status-badge error">
+                        <div class="status-icon warning-icon"></div>
+                        <span>Policy Violations: {{ p.violations | join(', ') }}</span>
+                      </div>
+                    {% else %}
+                      <div class="status-badge success">
+                        <div class="status-icon check-icon"></div>
+                        <span>Compliant</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="post-actions">
+                    <form method="POST" action="/instagram/delete" style="display:inline;">
+                      <input type="hidden" name="account_id" value="{{ aid }}">
+                      <input type="hidden" name="post_id" value="{{ p.id }}">
+                      <button class="btn btn-danger btn-sm">
+                        <div class="btn-icon delete-icon"></div>
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
 
     <!-- LinkedIn Tab -->
     <div id="linkedin" class="tab-content {% if active_tab == 'linkedin' %}active{% endif %}" style="{% if active_tab == 'linkedin' %}display:block;{% else %}display:none;{% endif %}">
@@ -508,6 +581,10 @@
           <li style="margin-bottom: 12px;">
             <a href="/delete" style="color: #ffffff; text-decoration: none; font-size: 14px; opacity: 0.7;">Delete My Data</a>
           </li>
+
+<li style="margin-bottom: 12px;">
+    <a href="/deauthorize" style="color: #ffffff; text-decoration: none; font-size: 14px; opacity: 0.7;">Deauthorize Site</a>
+</li>
           <li style="margin-bottom: 12px;">
             <a href="https://www.finra.org/" style="color: #ffffff; text-decoration: none; font-size: 14px; opacity: 0.7;">Compliance Guidelines</a>
           </li>
@@ -617,19 +694,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       });
     });
-
-// Auto-refresh About changes every 30 seconds
-setInterval(function() {
-    if (document.getElementById('facebook').style.display === 'block') {
-        // Only refresh if on Facebook tab
-        fetch('/facebook/about_changes')
-            .then(response => response.text())
-            .then(html => {
-                // Update just the about changes section
-                location.reload();
-            });
-    }
-}, 30000);
   </script>
 </body>
 </html>
