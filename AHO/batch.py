@@ -101,6 +101,56 @@ def ig_callback():
     flash("✅ Instagram connected", "success")
     return redirect(url_for("index", active_tab="instagram"))
 
+@app.route("/instagram/comments_all", methods=["POST"])
+def ig_comments_all():
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    raw = (request.form.get("account_id") or "").strip()
+    ig_user_id = raw if raw.isdigit() else get_primary_ig_user_id(token)
+    if not ig_user_id:
+        flash("❌ No linked Instagram Business/Creator account found.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # 1) get recent media
+    media = requests.get(
+        f"{GRAPH_URL}/{ig_user_id}/media",
+        params={"access_token": token, "fields": "id,caption,timestamp", "limit": 10}
+    ).json()
+
+    if "error" in media:
+        flash(f"❌ Instagram error: {media['error'].get('message','IG error')}", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    flat = []
+    for m in media.get("data", []):
+        cm = requests.get(
+            f"{GRAPH_URL}/{m['id']}/comments",
+            params={"access_token": token, "fields": "id,text,timestamp,username", "limit": 50}
+        ).json()
+        if "error" in cm:
+            continue
+        for c in cm.get("data", []):
+            txt = c.get("text") or ""
+            flat.append({
+                "id": c.get("id"),
+                "text": txt,
+                "timestamp": format_date(c.get("timestamp", "")),
+                "username": c.get("username"),
+                "violations": check_compliance(txt),
+            })
+
+    # reuse your existing comments card
+    return render_template(
+        "index.html",
+        active_tab="instagram",
+        ig_media_id="All recent media",
+        ig_comments=flat
+    )
+
+
 @app.route("/instagram/comments", methods=["POST"])
 def ig_comments():
     token = session.get("ig_token")
