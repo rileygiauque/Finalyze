@@ -101,6 +101,43 @@ def ig_callback():
     flash("✅ Instagram connected", "success")
     return redirect(url_for("index", active_tab="instagram"))
 
+@app.route("/instagram/comments", methods=["POST"])
+def ig_comments():
+    token = session.get("ig_token")
+    if not token:
+        flash("❌ Please log in with Instagram first.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    media_id = (request.form.get("media_id") or "").strip()
+    if not media_id:
+        flash("❌ Enter a media_id.", "error")
+        return redirect(url_for("index", active_tab="instagram"))
+
+    # Requires instagram_manage_comments
+    res = requests.get(
+        f"{GRAPH_URL}/{media_id}/comments",
+        params={"access_token": token, "fields": "id,text,timestamp,username"}
+    ).json()
+
+    comments = []
+    for c in res.get("data", []):
+        txt = c.get("text", "") or ""
+        comments.append({
+            "id": c.get("id"),
+            "text": txt,
+            "timestamp": format_date(c.get("timestamp", "")),
+            "username": c.get("username"),
+            "violations": check_compliance(txt)
+        })
+
+    return render_template(
+        "index.html",
+        active_tab="instagram",
+        ig_media_id=media_id,
+        ig_comments=comments
+    )
+
+
 @app.route("/instagram/collect", methods=["POST"])
 def ig_collect():
     token = session.get("ig_token")
