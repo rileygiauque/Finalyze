@@ -18,6 +18,10 @@ ig_posts_by_account = {}  # {account_id: [ {id, message, created_time, violation
 app = Flask(__name__)
 app.secret_key = "supersecretkey"  # session + flash
 
+@app.route("/")
+def index():
+    return render_template("index.html", active_tab="facebook", about_changes=last_about)
+
 @app.route('/intro')
 def intro():
     return render_template('intro.html')
@@ -990,9 +994,7 @@ def tw_delete():
     return redirect(url_for("tw_collect"))
 
 # ---------------- Main ----------------
-@app.route("/")
-def index():
-    return render_template("index.html", active_tab="facebook", about_changes=last_about)
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
